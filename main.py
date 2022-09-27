@@ -30,7 +30,9 @@ for fn in os.listdir("./cogs"):
 
 
 if __name__ == "__main__":
-    bot.run("OTQ5NTM1NTI0NjUyMjE2MzUw.G2Q8tI.PeKrwOzApkOo1kQqLBu3Y2W0N4nSkuCbcnEZpE")
+    my_secret = os.environ['TOKEN']
+    bot.run(my_secret)
+
 
 
 
