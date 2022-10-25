@@ -5,6 +5,7 @@ from nextcord.ext import commands
 import nextcord
 import os
 import requests
+from dotenv import load_dotenv
 intents = nextcord.Intents.all()
 intents.message_content = True
 
@@ -68,6 +69,8 @@ r = requests.post(url, headers=headers, json=json1)
 print(r.json())
 
 if __name__ == "__main__":
-    bot.run("OTQ5NTM1NTI0NjUyMjE2MzUw.GVWY12.-lokq_eC2Ey-oEWCsGqiYyRlyaE2kHZyxxBJrw")
+    load_dotenv()
+    token = os.getenv("TOKEN")
+    bot.run(token)
 
 

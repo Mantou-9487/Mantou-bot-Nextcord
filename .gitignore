@@ -1,1 +1,8 @@
-*.env
+Auto_Push.py
+.gitignore
+.txt
+.json
+.env
+.code-workspace
+.yml
+.jar
