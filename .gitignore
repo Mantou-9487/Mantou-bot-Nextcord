@@ -1,6 +1,5 @@
 Auto_Push.py
-.gitignore
-.txt
+*.txt
 .json
 .env
 .code-workspace
