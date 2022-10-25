@@ -1,0 +1,95 @@
+from http.client import HTTPException
+import nextcord
+from nextcord import Interaction, SlashOption, ChannelType
+from nextcord.abc import GuildChannel
+from nextcord.ext import commands
+from core.classes import Cog_Extension
+import yt_dlp as youtube_dl
+from nextcord.utils import get
+import asyncio
+import re
+import json
+import wavelink
+import os
+
+# 這邊可以使用Cog功能繼承基本屬性
+class music(commands.Cog):
+
+  def __init__(self, bot):
+    self.bot = bot
+    loop = asyncio.get_event_loop()
+    loop.create_task(self.node_connect())
+    print("執行成功!")
+    super().__init__()
+
+  @commands.Cog.listener()
+  async def on_wavelink_note_reday(node: wavelink.Node):
+    print(f"節點 {node.identifier} 已準備完畢!")
+
+  async def node_connect(self):
+    await self.bot.wait.until_ready()
+    await wavelink.NodePool.create_node(bot=self.bot, host="lavalinkinc.ml", port=443, password="incognito", https=True)
+
+  @nextcord.slash_command(name='p',description="播個音樂", guild_ids=[752110231437443255])
+  async def play(self, interaction: Interaction, search: str = SlashOption(description="Song Name")):
+    URL_REGEX = re.compile(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)+(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))")
+    channel = interaction.user.voice.channel
+    search = await wavelink.YouTubeTrack.search(query=search, return_first=True)
+    if not interaction.guild.voice_client:
+      vc: wavelink.Player = await channel.connect(cls=wavelink.Player)
+    elif not getattr(interaction.user.voice, "channel", None):
+      return await interaction.response.send_message("先加入語音頻道")
+    else:
+      vc: wavelink.Player = interaction.guild.voice_client
+    if vc.queue.is_empty and not vc.is_playing():
+      await vc.play(search)
+      print("我到了!")
+      await interaction.response.send_message(f"正在播放 {search.title}")
+    else:
+      await vc.queue.put_wait(search)
+      print("我沒到")
+      await interaction.response.send_message(f"你點的 {search.title} 因目前還有歌在播放,先行加入撥放清單")
+
+  @commands.Cog.listener()
+  async def on_wavelink_track_end(self, interaction:Interaction, track: wavelink.Track, reason):
+    vc: wavelink.Player = interaction.guild.voice_client
+    
+    if vc.queue.is_empty:
+      return await interaction.response.send_message("沒歌了我日")
+
+    next_song = vc.queue.get()
+    await vc.play(next_song)
+    await interaction.response.send_message(f"下一首歌: {next_song.title}")
+
+  @nextcord.slash_command(name='resume', description="重播音樂",guild_ids=[1003837176464810115])
+  async def _resume(self, interaction:Interaction):
+    channel = interaction.user.voice.channel
+    voice = get(self.client.voice_clients, guild=interaction.guild)
+
+    if not voice.is_playing():
+      voice.resume()
+      await interaction.response.send_message("開始音樂!")
+
+  @nextcord.slash_command(name='pause',
+                          description="暫停音樂",
+                          guild_ids=[1003837176464810115])
+  async def _pause(self, interaction:Interaction):
+    channel = interaction.user.voice.channel
+    voice = get(self.client.voice_clients, guild=interaction.guild)
+
+    if voice.is_playing():
+      voice.pause()
+      await interaction.response.send_message("已暫停音樂!")
+
+
+
+  @nextcord.slash_command(name='skip',description="跳過音樂", guild_ids=[1003837176464810115])
+  async def _skip(self, interaction:Interaction):
+    channel = interaction.user.voice.channel
+    voice = get(self.bot.voice_clients, guild=interaction.guild)
+    voice.pause()
+    await interaction.application_command.before_invoke(self.play_next)
+
+
+def setup(bot):
+  bot.add_cog(music(bot))
