@@ -61,8 +61,10 @@ json1 = {
     ]
 }
 # For authorization, you can use either your bot token
+load_dotenv()
+headertoken = os.getenv("TOKEN")
 headers = {
-    "Authorization": "Bot OTQ5NTM1NTI0NjUyMjE2MzUw.Gx-2js.gOsWpQc2PloQmiCoZPffThGTz0CvCBhoR4XB6I"
+    "Authorization": f"Bot {headertoken}"
 }
 
 r = requests.post(url, headers=headers, json=json)
