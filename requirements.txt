@@ -1,5 +1,5 @@
 
-nextcord==2.2.0
+nextcord
 numpy==1.22.3
 python-dotenv==0.21.0
 requests==2.27.1
