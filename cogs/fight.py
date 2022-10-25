@@ -75,21 +75,37 @@ class AttackView(nextcord.ui.View):
                     self.action = attacker
                     self.value = False
                     self.防禦 = None
-                elif self.防禦 == None or False:
-                    print(self.action)
-                    Deducthp = random.randint(1,5)
+                else:
+                    print("被攻方的防禦值:" + str(Deductdef))
+                    print("被攻方減少的hp:" + str(Deducthp))
                     Deduct_attacker_hp = self.attacker_hp - Deducthp
                     self.attacker_hp = Deduct_attacker_hp
                     print("攻擊方血量 " + str(attacker_hp))
                     embed = nextcord.Embed(title="{0} | {1} 的攻擊!".format(battleemoji, interaction.user.name),description="你打了 <@{0}> `{1}` 滴血!!!".format(attacker, Deducthp), colour=nextcord.Colour.red())
                     embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
                     await interaction.response.send_message(embed=embed, ephemeral=True)
-                    embed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="{6} 打了 <@{0}> `{1}` 滴血!!!\n-------------------------------\n<@{2}> 的血為 `{3}`\n {7} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(attacker, Deducthp, attacker, Deduct_attacker_hp, victim, victim_hp, interaction.user.mention, vsemoji), colour=nextcord.Colour.random())
+                    embed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="因對方使用了{8}盾牌防禦部分傷害，因此 {6} 打了 <@{0}> `{1}` 滴血!!!\n-------------------------------\n<@{2}> 的血為 `{3}`\n {7} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(attacker, Deducthp, attacker, Deduct_attacker_hp, victim, victim_hp, interaction.user.mention, vsemoji, shieldemoji), colour=nextcord.Colour.random())
                     embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
                     await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=self)
                     self.round = self.round + 1
-                    self.value = False
                     self.action = attacker
+                    self.value = False
+                    self.防禦 = None
+            elif self.防禦 == None or False:
+                print(self.action)
+                Deducthp = random.randint(1,5)
+                Deduct_attacker_hp = self.attacker_hp - Deducthp
+                self.attacker_hp = Deduct_attacker_hp
+                print("攻擊方血量 " + str(attacker_hp))
+                embed = nextcord.Embed(title="{0} | {1} 的攻擊!".format(battleemoji, interaction.user.name),description="你打了 <@{0}> `{1}` 滴血!!!".format(attacker, Deducthp), colour=nextcord.Colour.red())
+                embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                embed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="{6} 打了 <@{0}> `{1}` 滴血!!!\n-------------------------------\n<@{2}> 的血為 `{3}`\n {7} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(attacker, Deducthp, attacker, Deduct_attacker_hp, victim, victim_hp, interaction.user.mention, vsemoji), colour=nextcord.Colour.random())
+                embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+                await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=self)
+                self.round = self.round + 1
+                self.value = False
+                self.action = attacker
             elif self.action == victim and victim != str(interaction.user.id):
                 print("攻擊時round:" + self.action)
                 print("else被攻擊的人:" + str(interaction.user.id))
@@ -102,21 +118,37 @@ class AttackView(nextcord.ui.View):
             if self.防禦 == True:
                 print("是我啦ㄏ哈")
                 self.action = victim
-                Deducthp:str = (random.randint(1,7)) - Deductdef
-                Deducthp[Deducthp < 0] = 0
-                print("攻方的防禦值:" + str(Deductdef))
-                print("攻方減少的hp:" + str(Deducthp))
-                Deduct_victim_hp = self.victim_hp - Deducthp
-                self.victim_hp = Deduct_victim_hp
-                embed = nextcord.Embed(title="{0} | {1} 的攻擊!".format(battleemoji, interaction.user.name),description="你打了 <@{0}> `{1}` 滴血!!!".format(victim, Deducthp), colour=nextcord.Colour.red())
-                embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
-                await interaction.response.send_message(embed=embed, ephemeral=True)
-                infoembed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="因對方使用了{8}盾牌防禦部分傷害，因此 {6} 打了 <@{0}> `{1}` 滴血!!!\n-------------------------------\n<@{2}> 的血為 `{3}`\n {7} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(victim, Deducthp, attacker, Deduct_attacker_hp, victim, Deduct_victim_hp, interaction.user.mention, vsemoji, shieldemoji), colour=nextcord.Colour.random())
-                embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
-                await interaction.followup.edit_message(message_id=message_fetch.id ,embed=infoembed, view=self)
-                self.round = self.round + 1
-                self.防禦 = None
-                self.value = False
+                Deducthp = (random.randint(1,7)) - Deductdef
+                if Deducthp < 0:
+                    Deducthp = 0
+                    print("攻方的防禦值:" + str(Deductdef))
+                    print("攻方減少的hp:" + str(Deducthp))
+                    Deduct_victim_hp = self.victim_hp - Deducthp
+                    self.victim_hp = Deduct_victim_hp
+                    embed = nextcord.Embed(title="{0} | {1} 的攻擊!".format(battleemoji, interaction.user.name),description="你打了 <@{0}> `{1}` 滴血!!!".format(victim, Deducthp), colour=nextcord.Colour.red())
+                    embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+                    await interaction.response.send_message(embed=embed, ephemeral=True)
+                    infoembed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="因對方使用了{8}盾牌防禦部分傷害，因此 {6} 打了 <@{0}> `{1}` 滴血!!!\n-------------------------------\n<@{2}> 的血為 `{3}`\n {7} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(victim, Deducthp, attacker, Deduct_attacker_hp, victim, Deduct_victim_hp, interaction.user.mention, vsemoji, shieldemoji), colour=nextcord.Colour.random())
+                    embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+                    await interaction.followup.edit_message(message_id=message_fetch.id ,embed=infoembed, view=self)
+                    self.round = self.round + 1
+                    self.防禦 = None
+                    self.value = False
+                else:
+                    print("攻方的防禦值:" + str(Deductdef))
+                    print("攻方減少的hp:" + str(Deducthp))
+                    Deduct_victim_hp = self.victim_hp - Deducthp
+                    self.victim_hp = Deduct_victim_hp
+                    embed = nextcord.Embed(title="{0} | {1} 的攻擊!".format(battleemoji, interaction.user.name),description="你打了 <@{0}> `{1}` 滴血!!!".format(victim, Deducthp), colour=nextcord.Colour.red())
+                    embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+                    await interaction.response.send_message(embed=embed, ephemeral=True)
+                    infoembed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="因對方使用了{8}盾牌防禦部分傷害，因此 {6} 打了 <@{0}> `{1}` 滴血!!!\n-------------------------------\n<@{2}> 的血為 `{3}`\n {7} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(victim, Deducthp, attacker, Deduct_attacker_hp, victim, Deduct_victim_hp, interaction.user.mention, vsemoji, shieldemoji), colour=nextcord.Colour.random())
+                    embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+                    await interaction.followup.edit_message(message_id=message_fetch.id ,embed=infoembed, view=self)
+                    self.round = self.round + 1
+                    self.防禦 = None
+                    self.value = False
+
             elif self.防禦 == None or False:
                 self.action = victim
                 Deducthp = random.randint(1,5)
@@ -143,16 +175,18 @@ class AttackView(nextcord.ui.View):
                 pass
             
         if self.attacker_hp <= 0:
+            inte = int("FFA500", 16)
+            color = hex(inte)
             trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
             view = OverView()
             print("遊戲結束!")
-            embed = nextcord.Embed(title=":{}: | 恭喜 {} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=nextcord.Colour.red())
+            embed = nextcord.Embed(title="{} | 遊戲結束!",description="恭喜 {} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color, 16))
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
         elif self.victim_hp <=0:
             trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
             view = OverView()
             print("遊戲結束!")
-            embed = nextcord.Embed(title=":{}: | 恭喜 {} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=nextcord.Colour.red())
+            embed = nextcord.Embed(title="{} | 遊戲結束!",description="恭喜 {} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color,16))
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
 
     @nextcord.ui.button(label= "防禦", style=nextcord.ButtonStyle.gray,emoji="<:shield1:1033672396353314856>")
@@ -167,7 +201,7 @@ class AttackView(nextcord.ui.View):
             embed = nextcord.Embed(title="{0} | 狀態報告".format(shieldemoji),description="你使出了防禦! 對方攻擊你的傷害降低了!", colour=nextcord.Colour.red())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.response.send_message(embed=embed, ephemeral=True)
-            embed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="{0} 這回合使用了防禦!\n-------------------------------\n<@{1}> 的血為 `{2}`\n {3} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(interaction.user.mention, attacker, Deduct_attacker_hp, vsemoji, victim, Deduct_victim_hp), colour=nextcord.Colour.random())
+            embed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="{0} 這回合使用了防禦!\n-------------------------------\n<@{1}> 的血為 `{2}`\n {3} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(interaction.user.mention, attacker, self.attacker_hp, vsemoji, victim, Deduct_victim_hp), colour=nextcord.Colour.random())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=self)
             self.round = self.round + 1
@@ -184,11 +218,12 @@ class AttackView(nextcord.ui.View):
             print("攻擊時round:" + self.action)
             print("攻擊時:" + str(interaction.user.id))
             Deduct_victim_hp = self.victim_hp
+            Deduct_attacker_hp = self.attacker_hp
             print("被攻擊方血量 " + str(victim_hp))
             embed = nextcord.Embed(title="{0} | 狀態報告".format(shieldemoji),description="你使出了防禦! 對方攻擊你的傷害降低了!", colour=nextcord.Colour.red())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.response.send_message(embed=embed, ephemeral=True)
-            infoembed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="{0} 這回合使用了防禦!\n-------------------------------\n<@{1}> 的血為 `{2}`\n {3} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(interaction.user.mention, attacker, Deduct_attacker_hp, vsemoji, victim, Deduct_victim_hp), colour=nextcord.Colour.random())
+            infoembed = nextcord.Embed(title="{0} | 戰鬥開始 - 第{1}回合!".format(emoji, self.round), description="{0} 這回合使用了防禦!\n-------------------------------\n<@{1}> 的血為 `{2}`\n {3} \n<@{4}> 的血為 `{5}`\n-------------------------------".format(interaction.user.mention, attacker, self.attacker_hp, vsemoji, victim, Deduct_victim_hp), colour=nextcord.Colour.random())
             infoembed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=infoembed, view=self)
             self.round = self.round + 1

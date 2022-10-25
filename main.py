@@ -62,10 +62,10 @@ json1 = {
 }
 # For authorization, you can use either your bot token
 headers = {
-    "Authorization": "Bot OTQ5NTM1NTI0NjUyMjE2MzUw.GVWY12.-lokq_eC2Ey-oEWCsGqiYyRlyaE2kHZyxxBJrw"
+    "Authorization": "Bot OTQ5NTM1NTI0NjUyMjE2MzUw.Gx-2js.gOsWpQc2PloQmiCoZPffThGTz0CvCBhoR4XB6I"
 }
 
-r = requests.post(url, headers=headers, json=json1)
+r = requests.post(url, headers=headers, json=json)
 print(r.json())
 
 if __name__ == "__main__":
