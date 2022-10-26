@@ -56,7 +56,7 @@ json = {
 }
 
 json1 = {
-    "name": "eval1",
+    "name": "eval2",
     "description": "噓~",
     "type": 1,
     "options": [
