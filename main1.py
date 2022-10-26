@@ -6,7 +6,7 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
-from flask import Flask, render_templat
+from flask import Flask, render_template
 intents = nextcord.Intents.all()
 intents.message_content = True
 
