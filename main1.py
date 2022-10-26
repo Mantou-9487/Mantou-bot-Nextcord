@@ -6,20 +6,14 @@ from nextcord.ext import commands
 import nextcord
 import os
 import requests
+import keep_alive
 from dotenv import load_dotenv
-from flask import Flask, render_template
 intents = nextcord.Intents.all()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 testserverid = 889054851496046632
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return render_template("index.html")
 
 @bot.event
 async def on_ready():
@@ -81,5 +75,5 @@ print(r.json())
 if __name__ == "__main__":
     load_dotenv()
     token = os.getenv("TOKEN")
+    keep_alive.keep_alive()
     bot.run(token)
-    app.run(Debug=True)
