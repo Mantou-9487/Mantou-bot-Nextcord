@@ -62,7 +62,7 @@ json1 = {
             {
             "name": "option",
             "required": True,
-            "type": 1,
+            "type": 2,
             "description": "噓"
         }
     ]
