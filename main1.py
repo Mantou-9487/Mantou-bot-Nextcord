@@ -81,7 +81,6 @@ def hello_world():
     return 'Hello, World!'
 
 if __name__ == "__main__":
-    load_dotenv()
     token = os.getenv("TOKEN")
-    app.run(debug=True)
     bot.run(token)
+    app.run(debug=True)
