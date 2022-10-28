@@ -75,5 +75,5 @@ print(r.json())
 
 if __name__ == "__main__":
     token = os.getenv("TOKEN")
-    bot.run(token)
     os.system("gunicorn app:app")
+    bot.run(token)
