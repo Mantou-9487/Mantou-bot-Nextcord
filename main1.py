@@ -78,5 +78,5 @@ print(r.json())
 
 if __name__ == "__main__":
     token = os.getenv("TOKEN")
-    stay()
     bot.run(token)
+    stay()
