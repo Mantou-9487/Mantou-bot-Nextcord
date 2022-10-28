@@ -7,8 +7,9 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
-import threading
-from app import stay
+from threading import Thread
+from functools import partial
+from flask import Flask
 
 intents = nextcord.Intents.all()
 intents.message_content = True
@@ -71,10 +72,20 @@ headers = {
     "Authorization": f"Bot {headertoken}"
 }
 
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+partial_run = partial(app.run, host="0.0.0.0",port=80, debug=True)
+
 r = requests.post(url, headers=headers, json=json)
 print(r.json())
 
 if __name__ == "__main__":
+    t = Thread(target=partial_run)
     token = os.getenv("TOKEN")
+    t.start()
     bot.run(token)
-    stay()
