@@ -74,14 +74,22 @@ headers = {
     "Authorization": f"Bot {headertoken}"
 }
 
-partial_run = os.system("gunicorn app:app")
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+partial_run = partial(app.run(), host="0.0.0.0", port="10000" ,use_reloader=False)
 
 r = requests.post(url, headers=headers, json=json)
 print(r.json())
 
-if __name__ == "__main__":
-    t = Thread(target=partial_run)
-    token = os.getenv("TOKEN")
-    t.start()
-    bot.run(token)
+
+t = Thread(target=partial_run)
+t.start()
+token = os.getenv("TOKEN")
+bot.run(token)
+    
     
