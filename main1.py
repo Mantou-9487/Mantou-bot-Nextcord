@@ -79,7 +79,7 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
 
-partial_run = partial(app.run, host="0.0.0.0",port=80, debug=True)
+partial_run = os.system("gunicorn app:app")
 
 r = requests.post(url, headers=headers, json=json)
 print(r.json())
