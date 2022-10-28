@@ -73,6 +73,6 @@ r = requests.post(url, headers=headers, json=json)
 print(r.json())
 
 if __name__ == "__main__":
-    os.system("gunicorn app:app")
     token = os.getenv("TOKEN")
     bot.run(token)
+    os.system("gunicorn app:app")
