@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from threading import Thread
 from functools import partial
 from flask import Flask
+import app
 import os
 
 
@@ -74,8 +75,8 @@ headers = {
     "Authorization": f"Bot {headertoken}"
 }
 
-if __name__ == "__main__":
-    token = os.getenv("TOKEN")
-    bot.run(token)
+
+token = os.getenv("TOKEN")
+bot.run(token)
     
     
