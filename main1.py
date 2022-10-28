@@ -7,7 +7,11 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
-from app import stay
+from threading import Thread
+from functools import partial
+from flask import Flask
+import os
+
 
 intents = nextcord.Intents.all()
 intents.message_content = True
@@ -70,13 +74,14 @@ headers = {
     "Authorization": f"Bot {headertoken}"
 }
 
-
-
+partial_run = os.system("gunicorn app:app")
 
 r = requests.post(url, headers=headers, json=json)
 print(r.json())
 
 if __name__ == "__main__":
+    t = Thread(target=partial_run)
     token = os.getenv("TOKEN")
+    t.start()
     bot.run(token)
-    stay()
+    
