@@ -83,4 +83,4 @@ def hello_world():
 if __name__ == "__main__":
     token = os.getenv("TOKEN")
     bot.run(token)
-    app.run(debug=True)
+    app.run(threaded=True, debug=True)
