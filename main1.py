@@ -8,6 +8,7 @@ import os
 import requests
 from dotenv import load_dotenv
 import threading
+from app import stay
 
 intents = nextcord.Intents.all()
 intents.message_content = True
@@ -75,5 +76,5 @@ print(r.json())
 
 if __name__ == "__main__":
     token = os.getenv("TOKEN")
-    os.system("gunicorn app:app")
+    stay()
     bot.run(token)

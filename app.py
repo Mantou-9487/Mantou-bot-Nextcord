@@ -1,5 +1,6 @@
 from flask import Flask
 from threading import Thread
+import os
 
 app = Flask(__name__)
 
@@ -9,7 +10,7 @@ def hello_world():
     return 'Hello, World!'
 
 def run():
-  app.run(host = '0.0.0.0', port = 8080)
+  os.system("gunicorn app:app")
 
 def stay():
     stay = Thread(target=run)
