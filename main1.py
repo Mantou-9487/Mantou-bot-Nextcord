@@ -7,7 +7,6 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
-from flask import Flask
 
 intents = nextcord.Intents.all()
 intents.message_content = True
@@ -73,14 +72,7 @@ headers = {
 r = requests.post(url, headers=headers, json=json)
 print(r.json())
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
 if __name__ == "__main__":
+    os.system("gunicorn app:app")
     token = os.getenv("TOKEN")
     bot.run(token)
-    app.run(threaded=True, debug=True)
