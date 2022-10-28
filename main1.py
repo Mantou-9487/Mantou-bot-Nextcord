@@ -7,6 +7,7 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
+import threading
 
 intents = nextcord.Intents.all()
 intents.message_content = True
