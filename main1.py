@@ -6,8 +6,9 @@ from nextcord.ext import commands
 import nextcord
 import os
 import requests
-import keep_alive
 from dotenv import load_dotenv
+from flask import Flask
+
 intents = nextcord.Intents.all()
 intents.message_content = True
 
@@ -72,8 +73,15 @@ headers = {
 r = requests.post(url, headers=headers, json=json)
 print(r.json())
 
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
 if __name__ == "__main__":
     load_dotenv()
     token = os.getenv("TOKEN")
-    keep_alive.keep_alive()
+    app.run(debug=True)
     bot.run(token)
