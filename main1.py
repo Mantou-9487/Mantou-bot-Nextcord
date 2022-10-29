@@ -27,6 +27,7 @@ def hello_world():
 @bot.event
 async def on_ready():
     print("ready")
+    await bot.change_presence(activity=nextcord.Game(name="機器人版本:V1.0.2 | 作者by 鰻頭"))
 
 
 @bot.listen('on_message')

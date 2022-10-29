@@ -1,4 +1,5 @@
 
+from curses import savetty
 from distutils.cmd import Command
 from re import T
 from urllib import response
@@ -51,10 +52,13 @@ class Music(commands.Cog):
     async def on_wavelink_track_end(self, player: CustomPlayer, track:wavelink.YouTubeTrack, reason):
         next_song = player.queue.get()
         await player.play(next_song)
+        await say.response.send_message("你播了下一首歌!")
 
     @nextcord.slash_command(name='skip',description="跳過音樂")
     @commands.is_owner()
     async def skip(self, interaction: Interaction):
+      global say
+      say = interaction
       vc: wavelink.Player = interaction.guild.voice_client
       if vc:
         if not vc.is_playing():
