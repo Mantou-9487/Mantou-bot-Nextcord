@@ -1,5 +1,4 @@
 
-from unicodedata import name
 from nextcord import Interaction, SelectOption, ChannelType
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
@@ -7,11 +6,6 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
-from threading import Thread
-from functools import partial
-from flask import Flask
-import app
-import os
 
 
 intents = nextcord.Intents.all()
@@ -75,8 +69,8 @@ headers = {
     "Authorization": f"Bot {headertoken}"
 }
 
-
-token = os.getenv("TOKEN")
-bot.run(token)
+if __name__ == "__main__":
+    token = os.getenv("TOKEN")
+    bot.run(token)
     
     
