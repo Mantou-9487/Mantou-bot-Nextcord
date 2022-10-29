@@ -57,7 +57,7 @@ class AttackView(nextcord.ui.View):
         if self.action == victim and victim == str(interaction.user.id):
             if self.防禦 == True:
                 print("是我啦哈哈")
-                Deducthp = random.randint(1,7) - Deductdef
+                Deducthp = random.randint(1,6) - Deductdef
                 if Deducthp < 0:
                     Deducthp = 0
                     print("被攻方的防禦值:" + str(Deductdef))
@@ -118,7 +118,7 @@ class AttackView(nextcord.ui.View):
             if self.防禦 == True:
                 print("是我啦ㄏ哈")
                 self.action = victim
-                Deducthp = (random.randint(1,7)) - Deductdef
+                Deducthp = (random.randint(1,6)) - Deductdef
                 if Deducthp < 0:
                     Deducthp = 0
                     print("攻方的防禦值:" + str(Deductdef))
@@ -180,19 +180,19 @@ class AttackView(nextcord.ui.View):
             trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
             view = OverView()
             print("遊戲結束!")
-            embed = nextcord.Embed(title="{} | 遊戲結束!",description="恭喜 {} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color, 16))
+            embed = nextcord.Embed(title="{0} | 遊戲結束!",description="恭喜 {1} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color, 16))
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
         elif self.victim_hp <=0:
             trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
             view = OverView()
             print("遊戲結束!")
-            embed = nextcord.Embed(title="{} | 遊戲結束!",description="恭喜 {} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color,16))
+            embed = nextcord.Embed(title="{0} | 遊戲結束!",description="恭喜 {1} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color,16))
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
 
     @nextcord.ui.button(label= "防禦", style=nextcord.ButtonStyle.gray,emoji="<:shield1:1033672396353314856>")
     async def deftense(self, button: nextcord.ui.Button, interaction:Interaction):
         global Deductdef
-        Deductdef = random.randint(1,3)
+        Deductdef = random.randint(2,5)
         shieldemoji = nextcord.utils.get(guild.emojis, name="shield1")
         emoji = nextcord.utils.get(guild.emojis, name="sword")
         vsemoji = nextcord.utils.get(guild.emojis, name="vs")
@@ -240,12 +240,25 @@ class AttackView(nextcord.ui.View):
                 pass
             except nextcord.errors.InteractionResponded:
                 pass
+        if self.attacker_hp <= 0:
+            inte = int("FFA500", 16)
+            color = hex(inte)
+            trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
+            view = OverView()
+            print("遊戲結束!")
+            embed = nextcord.Embed(title="{0} | 遊戲結束!",description="恭喜 {1} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color, 16))
+            await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
+        elif self.victim_hp <=0:
+            trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
+            view = OverView()
+            print("遊戲結束!")
+            embed = nextcord.Embed(title="{0} | 遊戲結束!",description="恭喜 {1} 勝利!!!!!!!!!".format(trophyemoji, interaction.user.name), colour=int(color,16))
+            await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
 
 class OverView(nextcord.ui.View):
     def __init__(self):
         super().__init__()
     
-
 
 class fight(commands.Cog):
     def __init__(self, bot:commands.Bot):
