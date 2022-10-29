@@ -6,6 +6,8 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
+from flask import Flask
+from threading import Thread
 
 
 intents = nextcord.Intents.all()
@@ -14,6 +16,13 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 testserverid = 889054851496046632
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 
 @bot.event
 async def on_ready():
@@ -62,6 +71,15 @@ json1 = {
         }
     ]
 }
+
+def flask_thread(func):
+    thread = Thread(target=func)
+    print('Start Separate Thread From Bot')
+    thread.start()
+
+def run():
+    app.run(host='0.0.0.0', port=10000, use_reloader=False)
+
 # For authorization, you can use either your bot token
 load_dotenv()
 headertoken = os.getenv("TOKEN")
@@ -70,6 +88,7 @@ headers = {
 }
 
 if __name__ == "__main__":
+    flask_thread(func=run)
     token = os.getenv("TOKEN")
     bot.run(token)
     
