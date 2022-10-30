@@ -6,6 +6,7 @@ from nextcord.ext import commands
 
 class Playerview(nextcord.ui.View):
     def __init__(self):
+      super().__init__()
       self.change = "Play"
       self.player = CustomPlayer()
 
