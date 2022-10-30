@@ -10,7 +10,7 @@ class Playerview(nextcord.ui.View):
       self.change = "Play"
       self.player = CustomPlayer()
 
-    @nextcord.ui.button(label="⏸/▶️", style=nextcord.ButtonStyle.gray)
+    @nextcord.ui.button(label="⏸ / ▶️", style=nextcord.ButtonStyle.gray)
     async def pause(self, button: nextcord.ui.Button, interaction:Interaction):
       vc: wavelink.Player = interaction.guild.voice_client
       if vc:
@@ -28,19 +28,8 @@ class Playerview(nextcord.ui.View):
           embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
           await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    @nextcord.ui.button(label="中斷連線", style=nextcord.ButtonStyle.red, emoji="<:wave:1036113060844286013>")
-    async def disconnect(self, button: nextcord.ui.Button, interaction:Interaction):
-      vc: wavelink.Player = interaction.guild.voice_client
-      if vc:
-        await self.player.disconnect()
-        embed = nextcord.Embed(title=" 我被 {} 中斷連線了!".format(interaction.user.name), colour=nextcord.Colour.red())
-        await interaction.response.send_message(embed=embed, view=None)
-      else:
-          embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
-          await interaction.response.send_message(embed=embed, ephemeral=True)
-
     @nextcord.ui.button(label="", style=nextcord.ButtonStyle.red, emoji="<:skip:1036113702115623014>")
-    async def disconnect(self, button: nextcord.ui.Button, interaction:Interaction):
+    async def skip(self, button: nextcord.ui.Button, interaction:Interaction):
         vc: wavelink.Player = interaction.guild.voice_client
         if vc:
           await vc.seek(vc.track.length * 1000)
@@ -50,6 +39,17 @@ class Playerview(nextcord.ui.View):
             embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
+    @nextcord.ui.button(label="中斷連線", style=nextcord.ButtonStyle.red, emoji="")
+    async def disconnect(self, button: nextcord.ui.Button, interaction:Interaction):
+      vc: wavelink.Player = interaction.guild.voice_client
+      if vc:
+        await self.player.disconnect()
+        embed = nextcord.Embed(title=" 我被 {} 中斷連線了!".format(interaction.user.name), colour=nextcord.Colour.red())
+        await interaction.response.send_message(embed=embed, view=None)
+      else:
+          embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
+          await interaction.response.send_message(embed=embed, ephemeral=True)
+          
 class CustomPlayer(wavelink.Player):
   def __init__(self):
      self.queue = wavelink.Queue()
@@ -91,11 +91,11 @@ class Music(commands.Cog):
             vc: wavelink.Player = interaction.guild.voice_client
         if vc.queue.is_empty and not vc.is_playing():
           await vc.play(search)
-          embed = nextcord.Embed(title="[{0}]({1})".format(search.title, wait_song))
+          embed = nextcord.Embed(title="{}".format(search.title), colour=nextcord.Colour.random(),url=wait_song)
           await interaction.response.send_message("{} | 正在播放".format(playeremoji), embed=embed ,view=view)
         else:
           await vc.queue.put_wait(search)
-          embed = nextcord.Embed(title="[{0}]({1})".format(wait_song.title, wait_song))
+          embed = nextcord.Embed(title="{}".format(wait_song.title),colour=nextcord.Colour.random(),url=wait_song)
         await interaction.response.send_message("{} | 正在播放".format(playeremoji), embed=embed ,view=view)
 
     @commands.Cog.listener()
