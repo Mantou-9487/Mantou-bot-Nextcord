@@ -158,7 +158,7 @@ class Music(commands.Cog):
           length_time = "%02d:%02d" %divmod(sec, 60)
           print(track.info)
           embed = nextcord.Embed(title="{}".format(search.title), description="00:00 / {0}".format(length_time) ,colour=nextcord.Colour.random(),url=url)
-          embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
           message = await interaction.response.send_message("▶ | 正在播放", embed=embed ,view=view)
           message_fetch = await message.fetch()
           await view.wait()
