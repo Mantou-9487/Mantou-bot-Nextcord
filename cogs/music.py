@@ -1,5 +1,4 @@
 import asyncio
-
 import wavelink
 import nextcord
 from nextcord import Interaction
@@ -46,7 +45,7 @@ class Playerview(nextcord.ui.View):
             embed = nextcord.Embed(title="<:pause:1037002511439122523> | 已暫停!", colour=nextcord.Colour.red())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.response.send_message(embed=embed)
-            await interaction.followup.edit_message(message_id=track_messgae_fetch.id, content=None, view=self)
+            await interaction.followup.edit_message(message_id=message_fetch.id, content=None, view=self)
           elif self.change == "Pause":
             self.change = "Play"
             button.label = "⏸"
@@ -54,7 +53,7 @@ class Playerview(nextcord.ui.View):
             embed = nextcord.Embed(title="<:play:1037002859146915941> | 已繼續撥放!", colour=nextcord.Colour.green())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.response.send_message(embed=embed)
-            await interaction.followup.edit_message(message_id=track_messgae_fetch.id, content=None, view=self)
+            await interaction.followup.edit_message(message_id=message_fetch.id, content=None, view=self)
       else:
           embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
           embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
@@ -92,6 +91,7 @@ class Playerview(nextcord.ui.View):
       if vc:
             print(message_fetch.id)
             track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+            yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
             sec = track.length
             length_time = "%02d:%02d" %divmod(sec, 60)
             now_time = "%02d:%02d" %divmod(track_time, 60)
@@ -99,7 +99,8 @@ class Playerview(nextcord.ui.View):
             title = track.title
             embed = nextcord.Embed(title="{}".format(title), description="{1} / {0}".format(length_time, now_time) ,colour=nextcord.Colour.random(),url=url)
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
-            await interaction.response.send_message("已更新!")
+            embed.set_thumbnail(yttrack.thumbnail)
+            await interaction.response.send_message("已更新!", ephemeral=True)
             await interaction.followup.edit_message(message_id=message_fetch.id,embed=embed, view=self)
       else:
           embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
@@ -153,12 +154,14 @@ class Music(commands.Cog):
           search = await wavelink.YouTubeTrack.search(query=search, return_first=True)
           await vc.play(search)
           track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+          yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
           url = track.uri
           sec = track.length
           length_time = "%02d:%02d" %divmod(sec, 60)
           print(track.info)
           embed = nextcord.Embed(title="{}".format(search.title), description="00:00 / {0}".format(length_time) ,colour=nextcord.Colour.random(),url=url)
           embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          embed.set_thumbnail(yttrack.thumbnail)
           message = await interaction.response.send_message("▶ | 正在播放", embed=embed ,view=view)
           message_fetch = await message.fetch()
           await view.wait()
@@ -173,7 +176,6 @@ class Music(commands.Cog):
 
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track:wavelink.YouTubeTrack, reason):
-        global track_messgae_fetch
         self.track_end = True
         next_song = player.queue.get()
         await player.play(next_song)
@@ -186,8 +188,9 @@ class Music(commands.Cog):
         print(track.info)
         embed = nextcord.Embed(title="{}".format(title.title), description="{1} / {0}".format(length_time, now_time) ,colour=nextcord.Colour.random(),url=url)
         embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
-        message = await say.response.edit_message("▶ | 正在播放", embed=embed ,view=view)
-        track_messgae_fetch = await message.fetch()
+        embed.set_thumbnail(url=track.thumbnail)
+        await say.response.edit_message("▶ | 正在播放", embed=embed ,view=view)
+
     @commands.Cog.listener()
     async def on_wavelink_track_start(self, player: wavelink.Player, track:wavelink.YouTubeTrack):
       global track_time
