@@ -8,6 +8,8 @@ from nextcord import SlashOption
 from nextcord.ext import commands
 import time
 
+
+
 class StopView(nextcord.ui.View):
   def __init__(self):
       super().__init__(timeout=None)
@@ -142,6 +144,10 @@ class Music(commands.Cog):
         self.track_end = None
         self.here_song = False
         bot.loop.create_task(self.connect_nodes())
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+      print("Music Ready!")
 
     async def connect_nodes(self):
         await self.bot.wait_until_ready()

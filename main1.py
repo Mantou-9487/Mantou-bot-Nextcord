@@ -40,7 +40,6 @@ async def my_message(message):
 for fn in os.listdir("./cogs"):
     if fn.endswith(".py"):
         bot.load_extension(f"cogs.{fn[:-3]}")
-        print("Cog已加載")
 
 #註冊斜線指令
 url = "https://discord.com/api/v10/applications/949535524652216350/commands"

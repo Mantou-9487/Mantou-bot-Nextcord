@@ -5,6 +5,8 @@ import datetime
 import numpy as np
 from numpy import random
 
+
+
 class View(nextcord.ui.View):
     def __init__(self):
         super().__init__()
@@ -267,6 +269,11 @@ class OverView(nextcord.ui.View):
 class fight(commands.Cog):
     def __init__(self, bot:commands.Bot):
         self.bot = bot
+        
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("Fight Ready!")
+    
     @nextcord.slash_command(name='attack', description="攻擊你的朋友!")
     async def attack(self, interaction: Interaction, user:str = SlashOption(name="user", description="The user to edit",verify=True)):
         global guild
