@@ -20,7 +20,7 @@ class Ping(commands.Cog):
     async def ping(self, interaction:Interaction):
         global embed
         global message_id
-        embed = nextcord.Embed(title=":ping_pong: | Pong! {} ms".format(round(self.bot.latency * 1000)))
+        embed = nextcord.Embed(title=":ping_pong: | Pong! {} ms".format(round(self.bot.latency * 1000)),colour=nextcord.Colour.random())
         view = View() 
         message = await interaction.response.send_message(embed=embed,view=view)
         message_id = await message.fetch()
