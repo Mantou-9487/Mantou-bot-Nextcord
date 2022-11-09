@@ -14,12 +14,12 @@ bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 testserverid = 889054851496046632
 
-app = Flask(__name__,template_folder="Templates")
+app = Flask(__name__)
 
 
 @app.route('/')
 def hello_world():
-    return render_template("googlec9f5f0b5d9cc485f.html")
+    return "Hello, World!"
 
 @bot.event
 async def on_ready():
