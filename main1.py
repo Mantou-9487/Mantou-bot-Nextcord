@@ -1,5 +1,3 @@
-
-from nextcord import Interaction, SelectOption, ChannelType
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
 import nextcord
@@ -22,6 +20,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
+
     return render_template("googlec9f5f0b5d9cc485f.html")
 
 @bot.event
