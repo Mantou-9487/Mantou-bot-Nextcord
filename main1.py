@@ -6,7 +6,7 @@ import nextcord
 import os
 import requests
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template
 from threading import Thread
 
 
@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return render_template("googlec9f5f0b5d9cc485f.html")
 
 @bot.event
 async def on_ready():
@@ -79,6 +79,7 @@ def flask_thread(func):
 
 def run():
     app.run(host='0.0.0.0', port=10000, use_reloader=False)
+
 
 # For authorization, you can use either your bot token
 load_dotenv()

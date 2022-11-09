@@ -236,6 +236,38 @@ class Music(commands.Cog):
             payload_url["url"] = song
             pass
 
+    @nextcord.slash_command(name='nowplaying',description="現在播放啥",guild_ids=[1003837176464810115])
+    async def np(self, interaction: Interaction):
+      view = Playerview()
+      if not getattr(interaction.user.voice, "channel", None):
+          return await interaction.response.send_message("先加入語音啦!")
+      else:
+        vc: wavelink.Player = interaction.guild.voice_client
+        track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+        sec = track.length
+        yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
+        length_time = "%02d:%02d" %divmod(sec, 60)
+        now_time = "%02d:%02d" %divmod(track_time, 60)
+      if self.here_song and vc.is_playing() == True:
+          block = "<:block:1038446262959222796>"
+          white = ""
+          embed1 = nextcord.Embed(title="{}".format(track.title), description="{1} {3}{3}{3}{3}{3}{3}{3}{3}{3}{3} {0}".format(length_time, now_time, block) ,colour=nextcord.Colour.random(),url=url)
+          embed1.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          embed1.add_field(name="下一首歌",value=f"[{title}]({wait_song})", inline=False)
+          embed1.set_thumbnail(yttrack.thumbnail)
+          await interaction.response.send_message(message_id=message_fetch.id, embed=embed1, view=view)
+      else:
+          await interaction.response.send_message("沒有歌再撥放!",ephemeral=True)
+      if self.here_song == False and vc.is_playing() == True:
+        embed = nextcord.Embed(title="{}".format(search.title), description="{1} / {0}".format(length_time,now_time) ,colour=nextcord.Colour.random(),url=url)
+        embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+        embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
+        embed.set_thumbnail(yttrack.thumbnail)
+        await interaction.response.send_message("▶ | 正在播放", embed=embed ,view=view)
+      else:
+        await interaction.response.send_message("沒有歌再撥放!",ephemeral=True)
+
+
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track:wavelink.YouTubeTrack, reason):
         vc: wavelink.Player = say.guild.voice_client
