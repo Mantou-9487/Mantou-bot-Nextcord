@@ -14,12 +14,11 @@ bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 testserverid = 889054851496046632
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder="Templates")
 
 
 @app.route('/')
 def hello_world():
-
     return render_template("googlec9f5f0b5d9cc485f.html")
 
 @bot.event
@@ -76,7 +75,7 @@ def flask_thread(func):
     thread.start()
 
 def run():
-    app.run(host='0.0.0.0', port=10000, use_reloader=False)
+    app.run(host='0.0.0.0', port=10000, use_reloader=False, debug=True)
 
 
 # For authorization, you can use either your bot token
