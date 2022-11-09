@@ -1,4 +1,3 @@
-from nextcord.abc import GuildChannel
 from nextcord.ext import commands
 import nextcord
 import os
