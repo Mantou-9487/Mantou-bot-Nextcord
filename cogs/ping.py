@@ -6,6 +6,8 @@ class View(nextcord.ui.View):
         super().__init__(timeout=None)
     @nextcord.ui.button(label="更新", style=nextcord.ButtonStyle.green, emoji="<:Update:1036992904352243743>")
     async def update(self, button: nextcord.ui.Button, interaction:Interaction):
+        print(latency)
+        embed = nextcord.Embed(title=":ping_pong: | Pong! {} ms".format(round(latency * 1000)),colour=nextcord.Colour.random())
         await interaction.response.edit_message(embed=embed, view=self)
 
 class Ping(commands.Cog):
@@ -18,9 +20,11 @@ class Ping(commands.Cog):
 
     @nextcord.slash_command(name="ping", description="查看機器人的延遲")
     async def ping(self, interaction:Interaction):
-        global embed
+        global latency
         global message_id
-        embed = nextcord.Embed(title=":ping_pong: | Pong! {} ms".format(round(self.bot.latency * 1000)),colour=nextcord.Colour.random())
+        latency = self.bot.latency
+        print(latency)
+        embed = nextcord.Embed(title=":ping_pong: | Pong! {} ms".format(round(latency * 1000)),colour=nextcord.Colour.random())
         view = View() 
         message = await interaction.response.send_message(embed=embed,view=view)
         message_id = await message.fetch()
