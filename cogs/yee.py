@@ -24,16 +24,6 @@ class sub(commands.Cog):
         self.api = "AIzaSyDhxhd0wQL3q2TMBo0QD5WVV_rqpwJwP4A"
         super().__init__()
     #影片通知
-    @tasks.loop(seconds=30)
-    async def checkforvideos(self):
-        channel = "https://www.youtube.com/channel/UCPcy_WwsHX4K1KR9Ru5091A/"
-        html = requests.get(channel+"/videos").text
-        try:
-            latest_video_url = "https://www.youtube.com/watch?v=" + re.search('(?<="videoId":").*?(?=")', html).group()
-        except:
-            return
-        channel = self.bot.get_channel(int(1004665938693599242))
-        await channel.send(f"這是個測試! 影片連結: {latest_video_url}")
 
 
     @commands.Cog.listener()
