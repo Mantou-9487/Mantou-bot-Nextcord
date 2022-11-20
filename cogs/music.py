@@ -208,8 +208,10 @@ class Music(commands.Cog):
         if not getattr(interaction.user.voice, "channel", None):
           return await interaction.response.send_message("先加入語音啦!")
         else:
+            print("no")
             vc: wavelink.Player = interaction.guild.voice_client
         if interaction.guild.voice_client == None:
+            print("yes")
             vc: wavelink.Player = await interaction.user.voice.channel.connect(cls=wavelink.Player)
         if vc.queue.is_empty and not vc.is_playing():
           global search
