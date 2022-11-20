@@ -6,6 +6,7 @@ import json
 from nextcord import Interaction
 from nextcord import SlashOption
 from nextcord.ext import commands
+from wavelink.ext import spotify
 import time
 
 
@@ -200,6 +201,7 @@ class Music(commands.Cog):
         say = interaction
         here_song = self.here_song
         wait_song = song
+        space = song.rstrip(" ")
         print("hay2")
         view = Playerview()
         print("hay")
@@ -212,7 +214,10 @@ class Music(commands.Cog):
         if vc.queue.is_empty and not vc.is_playing():
           global search
           global now_search
-          search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
+          if space.startswith("https://open.spotify.com/"):
+            search = await spotify.SpotifyTrack.search(query=song)
+          else:
+            search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
           now_search = search
           await vc.play(search)
           track = wavelink.Track(id=vc.track.id, info=vc.track.info)
@@ -233,10 +238,12 @@ class Music(commands.Cog):
           wait_song = song
           yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
           track = wavelink.Track(id=vc.track.id, info=vc.track.info)
-          search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
+          if space.startswith("https://open.spotify.com/"):
+            search = await spotify.SpotifyTrack.search(query=song)
+          else:
+            search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
           await vc.queue.put_wait(search)
           api = "AIzaSyDhxhd0wQL3q2TMBo0QD5WVV_rqpwJwP4A"
-          space = song.rstrip(" ")
           id = space.removeprefix("https://www.youtube.com/watch?v=")
           data = urllib.request.urlopen(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={api}&part=snippet").read()
           title = json.loads(data)['items'][0]['snippet']['title']
@@ -280,7 +287,6 @@ class Music(commands.Cog):
         now_time = "%02d:%02d" %divmod(track_time, 60)
         url = track.uri
       if self.here_song and vc.is_playing() == True:
-
           embed1 = nextcord.Embed(title="{}".format(track.title).format(length_time, now_time) ,colour=nextcord.Colour.random(),url=url)
           embed1.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
           embed1.add_field(name="下一首歌",value=f"[{title}]({wait_song})", inline=False)

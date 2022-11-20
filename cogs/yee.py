@@ -32,7 +32,7 @@ class sub(commands.Cog):
             latest_video_url = "https://www.youtube.com/watch?v=" + re.search('(?<="videoId":").*?(?=")', html).group()
         except:
             return
-        channel = self.bot.get_channel(int(952152959528095774))
+        channel = self.bot.get_channel(int(1004665938693599242))
         await channel.send(f"這是個測試! 影片連結: {latest_video_url}")
 
 
