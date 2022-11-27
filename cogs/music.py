@@ -217,7 +217,9 @@ class Music(commands.Cog):
           global search
           global now_search
           if space.startswith("https://open.spotify.com/"):
-            search = await spotify.SpotifyTrack.search(query=song)
+            decoded = spotify.decode_url(song)
+            if decoded and decoded['type'] is spotify.SpotifySearchType.track:
+              search = await spotify.SpotifyTrack.search(query=decoded["id"], type=decoded["type"])
           else:
             search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
           now_search = search

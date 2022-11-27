@@ -27,7 +27,7 @@ def test():
 @bot.event
 async def on_ready():
     print("ready")
-    await bot.change_presence(activity=nextcord.Game(name="機器人版本:V1.0.4 | 作者by 鰻頭"))
+    await bot.change_presence(activity=nextcord.Game(name="機器人版本:V1.0.5 | 作者by 鰻頭"))
 
 
 @bot.listen('on_message')
