@@ -64,12 +64,16 @@ class View(nextcord.ui.View):
 
 
 class autorole(commands.Cog):
-
-  def __init__(self, bot):
+  def __init__(self, bot:commands.Bot):
     self.bot = bot
+  
+  @commands.Cog.listener()
+  async def on_ready(self):
+    self.bot.add_view(View())
+    self.bot.add_modal(Modal())
+    print("Autorole Ready!")
 
   @nextcord.slash_command(name='autorole',description="自定義身分組")
-  @commands.is_owner()
   async def autorole(self, interaction: Interaction):
     embed = nextcord.Embed(title="設置你專屬的身分組",
                            description="點選以下的按鈕來設定ㄅ",
