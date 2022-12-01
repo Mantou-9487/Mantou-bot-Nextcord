@@ -4,7 +4,8 @@ from nextcord import Interaction, Member, SlashOption
 from typing import Optional
 
 class Info(commands.Cog):
-    def __init__(self):
+    def __init__(self, bot):
+        self.bot = bot
         super().__init__()
 
     @nextcord.slash_command(name="查看使用者資訊",description="透過ID查別人")
