@@ -59,15 +59,15 @@ json = {
 }
 
 json1 = {
-    "name": "eval",
-    "description": "噓~",
+    "name": "userinfo",
+    "description": "透過ID查別人",
     "type": 1,
     "options": [
             {
-            "name": "option",
+            "name": "target",
             "required": True,
             "type": 1,
-            "description": "噓"
+            "description": "放你要查的人ID"
         }
     ]
 }
@@ -79,6 +79,7 @@ def flask_thread(func):
 
 def run():
     app.run(host='0.0.0.0', port=10000, use_reloader=False, debug=True)
+    requests.post(url, headers=headers, json=json1)
 
 
 # For authorization, you can use either your bot token
