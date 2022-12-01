@@ -53,8 +53,7 @@ class Modal(nextcord.ui.Modal):
 
 class View(nextcord.ui.View):
 
-  def __init__(self, bot):
-    self.bot = bot
+  def __init__(self):
     super().__init__(timeout=None)
 
   @nextcord.ui.button(label="設定", emoji="🔧", style=nextcord.ButtonStyle.gray)
