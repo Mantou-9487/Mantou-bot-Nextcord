@@ -56,7 +56,7 @@ class View(nextcord.ui.View):
   def __init__(self):
     super().__init__(timeout=None)
 
-  @nextcord.ui.button(label="設定", emoji="🔧", style=nextcord.ButtonStyle.gray)
+  @nextcord.ui.button(label="設定", emoji="🔧", style=nextcord.ButtonStyle.gray,custom_id="settings")
   async def set(self, button: nextcord.ui.Button, interaction: Interaction):
     modal = Modal()
     await interaction.response.send_modal(modal=modal)
@@ -69,7 +69,6 @@ class autorole(commands.Cog):
   @commands.Cog.listener()
   async def on_ready(self):
     self.bot.add_view(View())
-    self.bot.add_modal(Modal())
     print("Autorole Ready!")
 
   @nextcord.slash_command(name='autorole',description="自定義身分組")
@@ -78,7 +77,7 @@ class autorole(commands.Cog):
                            description="點選以下的按鈕來設定ㄅ",
                            color=nextcord.Colour.random(),
                            timestamp=datetime.datetime.utcnow())
-    view = View(interaction.user)
+    view = View()
     await interaction.response.send_message(embed=embed, view=view)
 
 
