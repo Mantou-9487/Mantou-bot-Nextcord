@@ -31,24 +31,24 @@ class Modal(nextcord.ui.Modal):
     guild = interaction.guild
     colorcode = f"{self.color.value}"
     all_roles = await guild.fetch_roles()
-    num_roles = len(all_roles)
+    num_roles = interaction.user.top_role.position
     inte = int(colorcode, 16)
     color = hex(inte)
-    await guild.create_role(name=f"{self.rolename.value}",
-                            colour=int(color, 16))
-    role = nextcord.utils.get(guild.roles, name=f"{self.rolename.value}")
     try:
-      await role.edit(position=num_roles - 2)
-    except Forbidden:
-      return await interaction.response.send_message("我沒有權限執行這個命令!",
-                                                     ephemeral=True)
-
-    await interaction.user.add_roles(role)
-    embed = nextcord.Embed(title=":white_check_mark: 執行成功! ",
+      await guild.create_role(name=f"{self.rolename.value}",
+                              colour=int(color, 16))
+      role = nextcord.utils.get(guild.roles, name=f"{self.rolename.value}")
+      await role.edit(position=num_roles - 1)
+      await interaction.user.add_roles(role)
+      embed = nextcord.Embed(title=":white_check_mark: 執行成功! ",
                            description=f"你已成功取得了 <@&{role.id}> 的身分組!",
                            color=nextcord.Colour.random(),
                            timestamp=datetime.datetime.utcnow())
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+      await interaction.response.send_message(embed=embed, ephemeral=True)
+    except nextcord.HTTPException:
+      await role.delete(reason="因錯誤而刪除!")
+      await interaction.response.send_message("我沒有權限移動身分組!",ephemeral=True)
+
 
 
 class View(nextcord.ui.View):
@@ -56,7 +56,7 @@ class View(nextcord.ui.View):
   def __init__(self):
     super().__init__(timeout=None)
 
-  @nextcord.ui.button(label="設定", emoji="🔧", style=nextcord.ButtonStyle.gray,custom_id="settings")
+  @nextcord.ui.button(label="設定", emoji="🔧", style=nextcord.ButtonStyle.gray, custom_id="settings")
   async def set(self, button: nextcord.ui.Button, interaction: Interaction):
     modal = Modal()
     await interaction.response.send_modal(modal=modal)
