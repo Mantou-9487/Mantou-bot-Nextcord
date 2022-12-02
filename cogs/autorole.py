@@ -38,7 +38,7 @@ class Modal(nextcord.ui.Modal):
       await guild.create_role(name=f"{self.rolename.value}",
                               colour=int(color, 16))
       role = nextcord.utils.get(guild.roles, name=f"{self.rolename.value}")
-      await role.edit(position=num_roles - 1)
+      await role.edit(position=num_roles + 1)
       await interaction.user.add_roles(role)
       embed = nextcord.Embed(title=":white_check_mark: 執行成功! ",
                            description=f"你已成功取得了 <@&{role.id}> 的身分組!",
