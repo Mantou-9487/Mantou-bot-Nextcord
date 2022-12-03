@@ -27,5 +27,6 @@ class Info(commands.Cog):
         embed.add_field(name="加入群組時間",value=f"<t:{int(join_timestamp)}>",inline=False)
         embed.set_thumbnail(url=target.avatar.url)
         await interaction.response.send_message(embed=embed)
+        
 def setup(bot):
     bot.add_cog(Info(bot))

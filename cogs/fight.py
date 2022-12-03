@@ -276,7 +276,7 @@ class fight(commands.Cog):
         print("Fight Ready!")
     
     @nextcord.slash_command(name='attack', description="攻擊你的朋友!")
-    async def attack(self, interaction: Interaction, user:Optional[Member] = SlashOption(name="user", description="你要攻擊的朋友! 沒有朋友就算了",verify=True)):
+    async def attack(self, interaction: Interaction, user:Optional[Member] = SlashOption(name="user", description="你要攻擊的朋友! 沒有朋友就算了")):
         global guild
         guild = self.bot.get_guild(1003837176464810115)
         emoji = nextcord.utils.get(guild.emojis, name="sword")
@@ -284,7 +284,7 @@ class fight(commands.Cog):
         global attacker
         global viewround
         attacker = str(interaction.user.id)
-        str1 = user.strip("<")
+        str1 = str(user).strip("<")
         str2 = str1.strip(">")
         victim = str2.strip("@")
         print(victim)

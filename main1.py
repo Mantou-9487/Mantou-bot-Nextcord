@@ -51,9 +51,9 @@ json = {
     "options": [
             {
             "name": "user",
+            "type": 1,
             "description": "你要攻擊的朋友! 沒有朋友就算了",
-            "required": True,
-            "type": 1
+            "required": True
         }
     ]
 }
