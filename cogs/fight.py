@@ -1,9 +1,10 @@
 import nextcord
 from nextcord.ext import commands
-from nextcord import Interaction, SlashOption
+from nextcord import Interaction, SlashOption, Member
 import datetime
 import numpy as np
 from numpy import random
+from typing import Optional
 
 
 
@@ -275,7 +276,7 @@ class fight(commands.Cog):
         print("Fight Ready!")
     
     @nextcord.slash_command(name='attack', description="攻擊你的朋友!")
-    async def attack(self, interaction: Interaction, user:str = SlashOption(name="user", description="The user to edit",verify=True)):
+    async def attack(self, interaction: Interaction, user:Optional[Member] = SlashOption(name="user", description="你要攻擊的朋友! 沒有朋友就算了",verify=True)):
         global guild
         guild = self.bot.get_guild(1003837176464810115)
         emoji = nextcord.utils.get(guild.emojis, name="sword")

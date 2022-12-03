@@ -51,9 +51,9 @@ json = {
     "options": [
             {
             "name": "user",
-            "description": "The user to edit",
+            "description": "你要攻擊的朋友! 沒有朋友就算了",
             "required": True,
-            "type": 6
+            "type": 1
         }
     ]
 }
@@ -79,7 +79,7 @@ def flask_thread(func):
 
 def run():
     app.run(host='0.0.0.0', port=10000, use_reloader=False, debug=True)
-    requests.post(url, headers=headers, json=json1)
+    requests.post(url, headers=headers, json=json)
 
 
 # For authorization, you can use either your bot token
