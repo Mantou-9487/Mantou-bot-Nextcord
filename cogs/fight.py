@@ -298,7 +298,7 @@ class fight(commands.Cog):
             return
         else:
             embed = nextcord.Embed(title=":warning: 對決!", description="{} 想跟你對戰!".format(interaction.user.mention), colour=nextcord.Colour.random())
-            message = await interaction.response.send_message("{}".format(user) ,embed=embed, view=view)
+            message = await interaction.response.send_message("{}".format(user.mention) ,embed=embed, view=view)
             global message_fetch
             message_fetch = await message.fetch()
             print("元訊息id: "+ str(message_fetch.id))

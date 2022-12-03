@@ -14,7 +14,6 @@ class Info(commands.Cog):
     async def userinfo(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID")):
         embed = nextcord.Embed(title=target.name,colour=nextcord.Colour.random())
         embed.add_field(name="用戶ID",value=f"`{target.id}`",inline=False)
-        print(target.activity.name)
         embed.add_field(name="正在玩",value=f"{str(target.activity.name) if target.activity else 'N/A'}" ,inline=False)
         createdate_time = ((str(target.created_at.hour) +":"+ str(target.created_at.minute)))
         createdate_date = (str(target.created_at.date()).replace('-','/') + ' '+ createdate_time)
