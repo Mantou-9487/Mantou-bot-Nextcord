@@ -284,7 +284,7 @@ class fight(commands.Cog):
         global attacker
         global viewround
         attacker = str(interaction.user.id)
-        str1 = str(user).strip("<")
+        str1 = str(user.id).strip("<")
         str2 = str1.strip(">")
         victim = str2.strip("@")
         print(victim)
@@ -311,7 +311,7 @@ class fight(commands.Cog):
             viewround = victim
             victim_hp = 20 #被攻擊者
             attacker_hp = 20 #攻擊者
-            embed = nextcord.Embed(title="{} | 戰鬥開始!".format(emoji), description="{0} 的血為 `{1}`\n vs \n{2} 的血為 `{3}`".format(interaction.user.mention, attacker_hp, user, victim_hp), colour=nextcord.Colour.random())
+            embed = nextcord.Embed(title="{} | 戰鬥開始!".format(emoji), description="{0} 的血為 `{1}`\n vs \n{2} 的血為 `{3}`".format(interaction.user.mention, attacker_hp, user.mention, victim_hp), colour=nextcord.Colour.random())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             attackview = AttackView()
             await interaction.edit_original_message(content=None,embed=embed, view=attackview)

@@ -185,6 +185,12 @@ class Music(commands.Cog):
                                             password='www.freelavalink.ga',
                                             https=True,
                                             identifier='Main')
+        await wavelink.NodePool.create_node(bot=self.bot,
+                                            host='node1.kartadharta.xyz',
+                                            port=443,
+                                            password='kdlavalink',
+                                            https=True,
+                                            identifier='Main1')
     @commands.Cog.listener()
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         """Event fired when a node has finished connecting."""
@@ -221,7 +227,11 @@ class Music(commands.Cog):
             if decoded and decoded['type'] is spotify.SpotifySearchType.track:
               search = await spotify.SpotifyTrack.search(query=decoded["id"], type=decoded["type"])
           else:
-            search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
+            try:
+              search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
+            except nextcord.errors.ApplicationInvokeError:
+              node = await wavelink.NodePool.get_node(identifier='Main1')
+              search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
           now_search = search
           await vc.play(search)
           track = wavelink.Track(id=vc.track.id, info=vc.track.info)
