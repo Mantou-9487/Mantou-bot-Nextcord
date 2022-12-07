@@ -1,4 +1,5 @@
 import asyncio
+import aiohttp
 import wavelink
 import nextcord
 import urllib.request
@@ -229,7 +230,7 @@ class Music(commands.Cog):
           else:
             try:
               search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
-            except nextcord.errors.ApplicationInvokeError:
+            except nextcord.errors.ApplicationInvokeError or aiohttp.ClientConnectorError:
               node = await wavelink.NodePool.get_node(identifier='Main1')
               search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
           now_search = search
@@ -385,6 +386,12 @@ class Music(commands.Cog):
             break
         except NameError:
           pass
+    
+    @commands.Cog.listener()
+    async def on_disconnect(self):
+      vc: wavelink.Player = say.guild.voice_client
+      if vc:
+        vc.queue.clear()
 
 
 
