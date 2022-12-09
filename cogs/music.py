@@ -181,7 +181,7 @@ class Music(commands.Cog):
     async def connect_nodes(self):
         await self.bot.wait_until_ready()
         await wavelink.NodePool.create_node(bot=self.bot,
-                                            host='lavalink.oops.wtf',
+                                            host='ssl.freelavalink.ga',
                                             port=443,
                                             password='www.freelavalink.ga',
                                             https=True,
@@ -229,9 +229,10 @@ class Music(commands.Cog):
               search = await spotify.SpotifyTrack.search(query=decoded["id"], type=decoded["type"])
           else:
             try:
-              search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
+              node = wavelink.NodePool.get_node(identifier='Main')
+              search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
             except nextcord.errors.ApplicationInvokeError or aiohttp.ClientConnectorError:
-              node = await wavelink.NodePool.get_node(identifier='Main1')
+              node = wavelink.NodePool.get_node(identifier='Main1')
               search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
           now_search = search
           await vc.play(search)
