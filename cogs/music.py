@@ -17,6 +17,147 @@ class StopView(nextcord.ui.View):
       super().__init__(timeout=None)
       self.view = Playerview()
 
+class Nowplayingview(nextcord.ui.View):
+    def __init__(self):
+      super().__init__(timeout=None)
+      self.change = "Play"
+      self.now_skip = None
+      self.now_loop = None
+    @nextcord.ui.button(label="", style=nextcord.ButtonStyle.gray,emoji="<:pause:1037002511439122523>")
+    async def pause(self, button: nextcord.ui.Button, interaction:Interaction):
+      vc: wavelink.Player = interaction.guild.voice_client
+      if vc:
+        if track_end != True:
+          if self.change == "Play":
+            await vc.pause()
+            self.change = "Pause"
+            button.emoji = "<:play:1037002859146915941>"
+            embed = nextcord.Embed(title="<:pause:1037002511439122523> | 已暫停!", colour=nextcord.Colour.red())
+            embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+            await interaction.response.send_message(embed=embed)
+            await interaction.followup.edit_message(message_id=np_messgae_fetch.id, content=None, view=self)
+          elif self.change == "Pause":
+            self.change = "Play"
+            button.emoji = "<:pause:1037002511439122523>"
+            await vc.resume()
+            embed = nextcord.Embed(title="<:play:1037002859146915941> | 已繼續撥放!", colour=nextcord.Colour.green())
+            embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+            await interaction.response.send_message(embed=embed)
+            await interaction.followup.edit_message(message_id=np_messgae_fetch.id, content=None, view=self)
+        elif track_end == True:
+          if self.change == "Play":
+            await vc.pause()
+            self.change = "Pause"
+            button.label = "▶️"
+            embed = nextcord.Embed(title="<:pause:1037002511439122523> | 已暫停!", colour=nextcord.Colour.red())
+            embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+            await interaction.response.send_message(embed=embed)
+            await interaction.followup.edit_message(message_id=np_messgae_fetch.id, content=None, view=self)
+          elif self.change == "Pause":
+            self.change = "Play"
+            button.label = "⏸"
+            await vc.resume()
+            embed = nextcord.Embed(title="<:play:1037002859146915941> | 已繼續撥放!", colour=nextcord.Colour.green())
+            embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+            await interaction.response.send_message(embed=embed)
+            await interaction.followup.edit_message(message_id=np_messgae_fetch.id, content=None, view=self)
+      else:
+          embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
+          embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @nextcord.ui.button(label="", style=nextcord.ButtonStyle.gray, emoji="<:skip:1036113702115623014>")
+    async def skip(self, button: nextcord.ui.Button, interaction:Interaction):
+        vc: wavelink.Player = interaction.guild.voice_client
+        global now_skip
+        now_skip = self.now_skip
+        if vc:
+          self.now_skip = True
+          now_skip = self.now_skip
+          await vc.seek(vc.track.length * 1000)
+          embed = nextcord.Embed(title="<:skip:1036113702115623014> 已跳過歌曲!", colour=nextcord.Colour.green())
+          embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          await interaction.response.send_message(embed=embed)
+          self.now_skip = False
+          now_skip = self.now_skip
+        else:
+            embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
+            embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @nextcord.ui.button(label="中斷連線", style=nextcord.ButtonStyle.red)
+    async def disconnect(self, button: nextcord.ui.Button, interaction:Interaction):
+      vc: wavelink.Player = interaction.guild.voice_client
+      global have_disconnect
+      if vc:
+        have_disconnect = True
+        await vc.disconnect()
+        embed = nextcord.Embed(title=" 我被 {} 中斷連線了!".format(interaction.user.name), colour=nextcord.Colour.red())
+        vc.queue.clear()
+        embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+        await interaction.response.send_message(embed=embed)
+        
+      else:
+          embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
+          embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @nextcord.ui.button(label="更新", style=nextcord.ButtonStyle.green, emoji="<:Update:1036992904352243743>")
+    async def update(self, button: nextcord.ui.Button, interaction:Interaction):
+      vc: wavelink.Player = interaction.guild.voice_client
+      if vc:
+            track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+            yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
+            sec = track.length
+            length_time = "%02d:%02d" %divmod(sec, 60)
+            now_time = "%02d:%02d" %divmod(track_time, 60)
+            url = track.uri
+            if wait_song == None or here_song == False:
+              print("歌曲時間: " + now_time)
+              update_track = wavelink.Track(id=vc.track.id, info=vc.track.info) 
+              embed = nextcord.Embed(title="{}".format(update_track.title), description="{1} / {0}".format(length_time, now_time) ,colour=nextcord.Colour.random(),url=url)
+              embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+              embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
+              embed.set_thumbnail(yttrack.thumbnail)
+              await interaction.response.send_message("已更新!", ephemeral=True)
+              await interaction.followup.edit_message(message_id=np_messgae_fetch.id,embed=embed, view=self)
+            else:
+              print("歌曲時間: " + now_time)
+              embed = nextcord.Embed(title="{}".format(track.title), description="{1} / {0}".format(length_time, now_time) ,colour=nextcord.Colour.random(),url=url)
+              embed.set_footer(text="機器人作者by 鰻頭!", icon_url= "https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+              embed.add_field(name="下一首歌",value=f"[{title}]({wait_song})", inline=False)
+              embed.set_thumbnail(yttrack.thumbnail)
+              await interaction.response.send_message("已更新!", ephemeral=True)
+              await interaction.followup.edit_message(message_id=np_messgae_fetch.id,embed=embed, view=self)
+      else:
+          embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
+          embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          await interaction.response.send_message(embed=embed, ephemeral=True)
+    
+    @nextcord.ui.button(label="啟用重複播放", style=nextcord.ButtonStyle.blurple)
+    async def loop(self, button: nextcord.ui.Button, interaction:Interaction):
+      vc: wavelink.Player = interaction.guild.voice_client
+      if vc:
+        global loop
+        loop = self.now_loop
+        if loop == False or None:
+          button.label = "關閉重複播放"
+          self.now_loop = True
+          loop = self.now_loop
+          embed = nextcord.Embed(title="<:loop:1035850844958105660> | {} 已開啟重複播放!".format(interaction.user.name),colour=nextcord.Colour.green())
+          await interaction.response.send_message(embed=embed)
+          await interaction.followup.edit_message(message_id=np_messgae_fetch.id, content=None, view=self)
+        elif loop == True:
+          button.label = "啟用重複播放"
+          self.now_loop = False
+          loop = self.now_loop
+          embed = nextcord.Embed(title="<:loop:1035850844958105660> | {} 已關閉重複播放!".format(interaction.user.name),colour=nextcord.Colour.red())
+          await interaction.response.send_message(embed=embed)
+          await interaction.followup.edit_message(message_id=np_messgae_fetch.id, content=None, view=self)
+      else:
+          embed = nextcord.Embed(title=":x: 我不在一個語音頻道喔!", colour=nextcord.Colour.red())
+          embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+          await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class Playerview(nextcord.ui.View):
     def __init__(self):
@@ -246,7 +387,7 @@ class Music(commands.Cog):
           embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
           embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
           embed.set_thumbnail(yttrack.thumbnail)
-          message = await interaction.response.send_message("▶ | 正在播放", embed=embed ,view=view)
+          message = await interaction.response.send_message("▶ | 開始播放", embed=embed ,view=view)
           message_fetch = await message.fetch()
           await view.wait()
         else:
@@ -289,45 +430,54 @@ class Music(commands.Cog):
             payload_url["url"] = song
             pass
 
-    @nextcord.slash_command(name='nowplaying',description="現在播放啥",guild_ids=[1003837176464810115])
+    @nextcord.slash_command(name='nowplaying',description="現在播放啥")
     async def np(self, interaction: Interaction):
-      view = Playerview()
+      global np_messgae_fetch
       if not getattr(interaction.user.voice, "channel", None):
           return await interaction.response.send_message("先加入語音啦!")
       else:
         vc: wavelink.Player = interaction.guild.voice_client
-        track = wavelink.Track(id=vc.track.id, info=vc.track.info)
-        sec = track.length
-        yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
-        length_time = "%02d:%02d" %divmod(sec, 60)
-        now_time = "%02d:%02d" %divmod(track_time, 60)
-        url = track.uri
-      if self.here_song and vc.is_playing() == True:
+        try:
+          track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+          sec = track.length
+          yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
+          length_time = "%02d:%02d" %divmod(sec, 60)
+          now_time = "%02d:%02d" %divmod(track_time, 60)
+          url = track.uri
+        except AttributeError:
+            await interaction.response.send_message("沒有歌再撥放!",ephemeral=True)
+      if self.here_song == True and vc.is_playing() == True:
+          view = Playerview()
           embed1 = nextcord.Embed(title="{}".format(track.title).format(length_time, now_time) ,colour=nextcord.Colour.random(),url=url)
           embed1.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
           embed1.add_field(name="下一首歌",value=f"[{title}]({wait_song})", inline=False)
           embed1.set_thumbnail(yttrack.thumbnail)
-          await interaction.response.send_message(message_id=message_fetch.id, embed=embed1, view=view)
-      else:
+          await interaction.response.send_message("▶ | 正在播放", embed=embed1 ,view=view)
+      elif vc.is_playing() == False:
           await interaction.response.send_message("沒有歌再撥放!",ephemeral=True)
       if self.here_song == False and vc.is_playing() == True:
+        view = Nowplayingview()
         embed = nextcord.Embed(title="{}".format(search.title), description="{1} / {0}".format(length_time,now_time) ,colour=nextcord.Colour.random(),url=url)
         embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
         embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
         embed.set_thumbnail(yttrack.thumbnail)
-        await interaction.response.send_message("▶ | 正在播放", embed=embed ,view=view)
-      else:
+        np_messgae = await interaction.response.send_message("▶ | 正在播放", embed=embed ,view=view)
+        np_messgae_fetch = await np_messgae.fetch()
+      elif vc.is_playing() == False:
         await interaction.response.send_message("沒有歌再撥放!",ephemeral=True)
 
 
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track:wavelink.YouTubeTrack, reason):
         vc: wavelink.Player = say.guild.voice_client
-        if loop == False:
-          next_song = vc.queue.get()
-          await vc.play(next_song)
-        else: 
-          await vc.play(now_search)
+        try:
+          if loop == False:
+            next_song = vc.queue.get()
+            await vc.play(next_song)
+          else: 
+            await vc.play(now_search)
+        except NameError:
+          pass
         view = Playerview()
         global here_song
         here_song = self.here_song
@@ -381,7 +531,6 @@ class Music(commands.Cog):
         i1 = i + 1
         track_time = i1 
         await asyncio.sleep(1)
-        print(track_time)
         try:
           if track_time == sec or now_skip == True or have_disconnect == True or loop == True:
             break

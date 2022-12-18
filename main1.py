@@ -27,7 +27,7 @@ def test():
 @bot.event
 async def on_ready():
     print("ready")
-    await bot.change_presence(activity=nextcord.Game(name="機器人版本:V1.0.5 | 作者by 鰻頭"))
+    await bot.change_presence(activity=nextcord.Game(name="機器人版本:V1.0.6 | 作者by 鰻頭"))
 
 
 @bot.listen('on_message')
@@ -45,17 +45,9 @@ for fn in os.listdir("./cogs"):
 url = "https://discord.com/api/v10/applications/949535524652216350/commands"
 
 json = {
-    "name": "attack",
-    "description": "攻擊你的朋友!",
-    "type": 1,
-    "options": [
-            {
-            "name": "user",
-            "type": 1,
-            "description": "你要攻擊的朋友! 沒有朋友就算了",
-            "required": True
-        }
-    ]
+    "name": "nowplaying",
+    "description": "現在播放啥",
+    "type": 1
 }
 
 json1 = {
