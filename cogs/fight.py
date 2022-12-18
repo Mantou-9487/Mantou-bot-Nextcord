@@ -327,12 +327,6 @@ class fight(commands.Cog):
         embed = nextcord.Embed(title=":x: 出現錯誤了!!!", description=f"```{error}```")
         await interaction.response.send_message(embed=embed)
 
-    @nextcord.slash_command(name='eval', description="噓~")
-    async def eval(self, interaction: Interaction, option:str = SlashOption(name="option",description="噓")):
-        view = AttackView()
-        embed = nextcord.Embed(label=":white_check_mark: 神秘的結果", description="```py\n{}```".format(view + "." + option))
-        await interaction.response.send_message(embed=embed)
-
 
 def setup(bot):
     bot.add_cog(fight(bot))
