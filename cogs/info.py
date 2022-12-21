@@ -6,9 +6,8 @@ import time
 import datetime
 
 class View(nextcord.ui.View):
-    def __init__(self, ctx:commands.Context):
+    def __init__(self):
         super().__init__(timeout=None)
-        self.ctx = ctx
         self.default_avatar = True
 
     @nextcord.ui.button(label="伺服器頭貼",style=nextcord.ButtonStyle.green,emoji="<:loop:1035850844958105660>")
@@ -33,10 +32,6 @@ class View(nextcord.ui.View):
             embed = nextcord.Embed(title=f"{member.name} 的個人頭貼",colour=nextcord.Colour.random())
             embed.set_image(url=member.guild_avatar.url)
             await interaction.response.edit_message(embed=embed,view=self)
-
-    async def interaction_check(self, interaction: nextcord.Interaction):
-        if interaction.user.id != self.ctx.id:
-            await interaction.response.send_message("你點這幹嘛?")
 
 
 
