@@ -29,7 +29,6 @@ class sub(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("檢查影片跟訂閱功能已啟動!")
-        self.checkforvideos.start()
         
 
     @nextcord.slash_command(name='sub', description="顯示主播的訂閱數")
