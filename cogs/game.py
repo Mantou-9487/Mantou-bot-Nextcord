@@ -9,6 +9,7 @@ class Subscriptions(nextcord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
+        self.win = 0
         self.choice = None
     
     @nextcord.ui.button(label= "✂️", style=nextcord.ButtonStyle.green)
@@ -23,11 +24,12 @@ class Subscriptions(nextcord.ui.View):
             user_result = self.choice
             print(user_result)
             computer_result = random.choice(["剪刀","石頭","布"])
-            embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description="" ,timestamp= datetime.datetime.utcnow())
+            embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description=f"<:trophy:1033707678654005358> 勝利場數: {self.win} 場" ,timestamp= datetime.datetime.utcnow())
             if ((computer_result == "布" and user_result == "剪刀") or (computer_result == "石頭" and user_result == "布") or (computer_result == "剪刀" and user_result == "石頭")): #玩家贏了
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
                 embed.add_field(name="我出了", value="{}".format(computer_result), inline=False)
                 embed.add_field(name="結果", value="你贏了!", inline=False)
+                self.win += 1
                 await interaction.response.edit_message(embed=embed)
             elif user_result == computer_result:
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
@@ -50,13 +52,13 @@ class Subscriptions(nextcord.ui.View):
             self.value = False
             self.choice = "石頭"
             user_result = self.choice
-            print(user_result)
             computer_result = random.choice(["剪刀","石頭","布"])
-            embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description="" ,timestamp= datetime.datetime.utcnow())
+            embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description=f"<:trophy:1033707678654005358> 勝利場數: {self.win} 場" ,timestamp= datetime.datetime.utcnow())
             if ((computer_result == "布" and user_result == "剪刀") or (computer_result == "石頭" and user_result == "布") or (computer_result == "剪刀" and user_result == "石頭")): #玩家贏了
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
                 embed.add_field(name="我出了", value="{}".format(computer_result), inline=False)
                 embed.add_field(name="結果", value="你贏了!", inline=False)
+                self.win += 1
                 await interaction.response.edit_message(embed=embed)
             elif user_result == computer_result:
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
@@ -81,11 +83,12 @@ class Subscriptions(nextcord.ui.View):
             user_result = self.choice
             print(user_result)
             computer_result = random.choice(["剪刀","石頭","布"])
-            embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description="" ,timestamp= datetime.datetime.utcnow())
+            embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description=f"<:trophy:1033707678654005358> 勝利場數: {self.win} 場" ,timestamp= datetime.datetime.utcnow())
             if ((computer_result == "布" and user_result == "剪刀") or (computer_result == "石頭" and user_result == "布") or (computer_result == "剪刀" and user_result == "石頭")): #玩家贏了
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
                 embed.add_field(name="我出了", value="{}".format(computer_result), inline=False)
                 embed.add_field(name="結果", value="你贏了!", inline=False)
+                self.win += 1
                 await interaction.response.edit_message(embed=embed)
             elif user_result == computer_result:
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)

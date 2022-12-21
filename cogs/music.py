@@ -8,6 +8,8 @@ from nextcord import Interaction
 from nextcord import SlashOption
 from nextcord.ext import commands
 from wavelink.ext import spotify
+import sys
+import codecs
 import time
 
 
@@ -317,6 +319,7 @@ class Music(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+      sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
       print("Music Ready!")
 
     async def connect_nodes(self):

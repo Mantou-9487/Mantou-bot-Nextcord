@@ -15,7 +15,7 @@ class ExceptionHandler(commands.Cog):
         embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
         await interaction.response.send_message(embed=embed)
 
-    @nextcord.slash_command(name='eval', description="噓~")
+    @nextcord.slash_command(name='eval', description="噓~",guild_ids=[1003837176464810115])
     async def eval(self, interaction: Interaction, option:str = SlashOption(name="option",description="噓")):
 
         if interaction.user.id == 549056425943629825:
