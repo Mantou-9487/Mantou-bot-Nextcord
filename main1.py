@@ -51,15 +51,15 @@ json = {
 }
 
 json1 = {
-    "name": "userinfo",
+    "name": "avatar",
     "description": "透過ID查別人",
     "type": 1,
     "options": [
             {
             "name": "target",
-            "required": True,
             "type": 1,
-            "description": "放你要查的人ID"
+            "description": "放你要查的人ID",
+            "required": True,
         }
     ]
 }

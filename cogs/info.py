@@ -6,8 +6,9 @@ import time
 import datetime
 
 class View(nextcord.ui.View):
-    def __init__(self):
+    def __init__(self, ctx:commands.Context):
         super().__init__(timeout=None)
+        self.ctx = ctx
         self.default_avatar = True
 
     @nextcord.ui.button(label="伺服器頭貼",style=nextcord.ButtonStyle.green,emoji="<:loop:1035850844958105660>")
@@ -33,6 +34,9 @@ class View(nextcord.ui.View):
             embed.set_image(url=member.guild_avatar.url)
             await interaction.response.edit_message(embed=embed,view=self)
 
+    async def interaction_check(self, interaction: nextcord.Interaction):
+        if interaction.user.id != self.ctx.id:
+            await interaction.response.send_message("你點這幹嘛?")
 
 
 
@@ -42,7 +46,7 @@ class Info(commands.Cog):
         super().__init__()
 
     @nextcord.slash_command(name="查看使用者資訊",description="透過ID查別人")
-    async def userinfo(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID")):
+    async def userinfo(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID",required=True)):
         global member
         member = target
         if str(target).isdigit:
@@ -75,7 +79,7 @@ class Info(commands.Cog):
             embed.set_thumbnail(url=target.avatar.url)
             await interaction.response.send_message(embed=embed)
         
-    @nextcord.slash_command(name="avatar",description="透過ID查別人",force_global=True)
+    @nextcord.slash_command(name="頭貼",description="透過ID查別人",force_global=True)
     async def avatar(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID")):
         global member
         member = target
