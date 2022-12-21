@@ -11,7 +11,7 @@ class View(nextcord.ui.View):
         self.default_avatar = True
 
     @nextcord.ui.button(label="伺服器頭貼",style=nextcord.ButtonStyle.green,emoji="<:loop:1035850844958105660>")
-    async def server_avatar(self,button: nextcord.ui.Button, interaction:Interaction):
+    async def avatar(self,button: nextcord.ui.Button, interaction:Interaction):
         if self.default_avatar == True:
             if member.guild_avatar != None:
                 button.label = "個人頭貼"
