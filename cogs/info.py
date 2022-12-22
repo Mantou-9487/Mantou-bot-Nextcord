@@ -15,7 +15,7 @@ class View(nextcord.ui.View):
         if self.default_avatar == True:
             if member.guild_avatar != None:
                 button.label = "個人頭貼"
-                button.style = nextcord.ButtonStyle.blurple
+                button.style = nextcord.ButtonStyle.green
                 self.default_avatar = False
                 embed = nextcord.Embed(title=f"{member.name} 的伺服器頭貼",colour=nextcord.Colour.random())
                 embed.set_image(url=member.guild_avatar.url)
