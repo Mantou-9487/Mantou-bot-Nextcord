@@ -104,7 +104,7 @@ class game(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @nextcord.slash_command(name='剪刀石頭布',description="就是個剪刀石頭布",guild_ids=[1003837176464810115])
+    @nextcord.slash_command(name='剪刀石頭布',description="就是個剪刀石頭布",force_global=True)
     async def game(self, interaction: Interaction):
         global Player
         Player = str(interaction.user.id)
