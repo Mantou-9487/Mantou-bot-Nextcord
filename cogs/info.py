@@ -28,7 +28,7 @@ class View(nextcord.ui.View):
         else:
             button.label = "伺服器頭貼"
             button.style = nextcord.ButtonStyle.blurple
-            self.default_avatar = False
+            self.default_avatar = True
             embed = nextcord.Embed(title=f"{member.name} 的個人頭貼",colour=nextcord.Colour.random())
             embed.set_image(url=member.avatar.url)
             await interaction.response.edit_message(embed=embed,view=self)
