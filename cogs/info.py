@@ -30,7 +30,7 @@ class View(nextcord.ui.View):
             button.style = nextcord.ButtonStyle.blurple
             self.default_avatar = False
             embed = nextcord.Embed(title=f"{member.name} 的個人頭貼",colour=nextcord.Colour.random())
-            embed.set_image(url=member.guild_avatar.url)
+            embed.set_image(url=member.avatar.url)
             await interaction.response.edit_message(embed=embed,view=self)
 
 
