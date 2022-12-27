@@ -125,7 +125,7 @@ class Info(commands.Cog):
             await interaction.response.send_message(embed=embed, view=view)
     
 
-    @nextcord.slash_command(name="旗幟",description="透過ID查別人",guild_ids=[1003837176464810115])
+    @nextcord.slash_command(name="旗幟",description="透過ID查別人",force_global=True)
     async def banner(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID")):
         global member
         global guild_target
