@@ -1,5 +1,6 @@
 Auto_Push.py
 main.py
+adventure.py
 *.txt
 .json
 .env
