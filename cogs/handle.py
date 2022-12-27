@@ -1,4 +1,5 @@
 import nextcord
+from typing import Optional
 from nextcord.ext import commands
 from nextcord import Interaction, SlashOption
 import pymongo

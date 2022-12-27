@@ -49,6 +49,7 @@ class BannerView(nextcord.ui.View):
                 embed.set_image(url=member.guild.banner.url)
                 await interaction.response.edit_message(embed=embed,view=self)
             else:
+                print(guild_target.guild.banner)
                 button.label = "沒有伺服器旗幟!"
                 button.style = nextcord.ButtonStyle.red
                 button.disabled = True
@@ -56,7 +57,7 @@ class BannerView(nextcord.ui.View):
         else:
             button.label = "伺服器頭貼"
             button.style = nextcord.ButtonStyle.blurple
-            self.default_avatar = True
+            self.default_banner = True
             embed = nextcord.Embed(title=f"{member.name} 的個人旗幟",colour=nextcord.Colour.random())
             embed.set_image(url=member.banner.url)
             await interaction.response.edit_message(embed=embed,view=self)
