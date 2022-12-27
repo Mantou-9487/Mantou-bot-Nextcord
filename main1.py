@@ -45,8 +45,8 @@ for fn in os.listdir("./cogs"):
 url = "https://discord.com/api/v10/applications/949535524652216350/commands"
 
 json = {
-    "name": "nowplaying",
-    "description": "現在播放啥",
+    "name": "剪刀石頭布",
+    "description": "就是個剪刀石頭布",
     "type": 1
 }
 
