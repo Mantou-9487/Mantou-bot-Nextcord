@@ -10,7 +10,7 @@ from threading import Thread
 intents = nextcord.Intents.all()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+bot = commands.Bot(command_prefix="~", intents=intents, help_command=None)
 
 testserverid = 889054851496046632
 
@@ -51,7 +51,7 @@ json = {
 }
 
 json1 = {
-    "name": "avatar",
+    "name": "旗幟",
     "description": "透過ID查別人",
     "type": 1,
     "options": [

@@ -373,7 +373,7 @@ class Music(commands.Cog):
               search = await spotify.SpotifyTrack.search(query=decoded["id"], type=decoded["type"])
           else:
             try:
-              node = wavelink.NodePool.get_node(identifier='Main1')
+              node = wavelink.NodePool.get_node(identifier='Main')
               search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
             except nextcord.errors.ApplicationInvokeError or aiohttp.ClientConnectorError:
               node = wavelink.NodePool.get_node(identifier='Main1')

@@ -1,6 +1,18 @@
 import nextcord
 from nextcord.ext import commands
 from nextcord import Interaction, SlashOption
+import pymongo
+import math
+
+def adv_eval(id, new:dict):
+    myclient = pymongo.MongoClient("mongodb://mongo:sHG7YDV0nMasrjtAuQ3m@containers-us-west-188.railway.app:6917")
+    mydb = myclient['adventure']
+    mycol = mydb["user"]
+    eval_data = {"ID": { "$regex": f"^{id}" }}
+    eval_new = { "$set": new }
+    mycol.update_one(eval_data,eval_new)
+    
+
 class ExceptionHandler(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
@@ -19,8 +31,9 @@ class ExceptionHandler(commands.Cog):
     async def eval(self, interaction: Interaction, option:str = SlashOption(name="option",description="噓")):
 
         if interaction.user.id == 549056425943629825:
-            embed = nextcord.Embed(title=":white_check_mark: | 神秘的結果", description="```py\n{}```".format(eval(option)))
+            embed = nextcord.Embed(title=":white_check_mark: | 神秘的結果", description="```py\n{}```".format(eval(option)),colour=nextcord.Colour.green())
             await interaction.response.send_message(embed=embed)
+            print(f"邪惡的結果: {eval(option)}")
         else:
             embed = nextcord.Embed(title=":x: | 這個指令太過邪惡了,只有饅頭能夠駕馭他 (?")
             await interaction.response.send_message(embed=embed)
