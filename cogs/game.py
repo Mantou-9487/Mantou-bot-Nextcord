@@ -2,9 +2,11 @@ import nextcord
 from nextcord.ext import commands
 from nextcord import Interaction
 import datetime
-import random
+import numpy as np
 import math
 # 這邊可以使用Cog功能繼承基本屬性
+
+
 
 class Subscriptions(nextcord.ui.View):
     def __init__(self):
@@ -12,6 +14,8 @@ class Subscriptions(nextcord.ui.View):
         self.value = None
         self.win = 0
         self.lose = 0
+        self.list = []
+        self.dict = {"石頭":"布","剪刀":"石頭","布":"剪刀"}
         self.round = 0
         self.choice = None
     
@@ -26,8 +30,33 @@ class Subscriptions(nextcord.ui.View):
             self.value = False
             self.choice = "剪刀"
             user_result = self.choice
-            print(user_result)
-            computer_result = random.choice(["剪刀","石頭","布"])
+            #電腦判斷區
+            Dict = {"石頭":self.list.count("石頭"),"剪刀":self.list.count("剪刀"),"布":self.list.count("布")}
+            global computer_choice
+            if len(set(Dict.values())) == 1: #玩家三种出拳记录一样，电脑随机出拳
+                computer_choice = np.random.choice(["剪刀","石頭","布"])
+            elif len(set(Dict.values())) == 2:
+                m = min(Dict.values())
+                if list(Dict.values()).count(m) == 1: #两大一小，随机选择两大之一
+                    for key in Dict.keys():
+                        if Dict[key] == m:
+                            tempL = list(set(["石頭","剪刀","布",])-set([key,]))
+                            computer_choice = self.dict[np.random.choice(tempL)]
+                            break
+                else: #两小一大，直接取最大
+                    m = max(Dict.values())
+                    for key in Dict.keys():
+                        if Dict[key] == m:
+                            computer_choice = self.dict[key]
+                            break
+            else: #玩家三种出拳记录各不相等，取出拳次数最多的
+                m = max(Dict.values())
+                for key in Dict.keys():
+                    if Dict[key] == m:
+                        computer_choice = self.dict[key]
+                        break
+            self.list.append(self.choice)
+            computer_result = computer_choice
             embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description=f"<:trophy:1033707678654005358> 勝利場數: {self.win} 場")
             if ((computer_result == "布" and user_result == "剪刀") or (computer_result == "石頭" and user_result == "布") or (computer_result == "剪刀" and user_result == "石頭")): #玩家贏了
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
@@ -61,7 +90,33 @@ class Subscriptions(nextcord.ui.View):
             self.value = False
             self.choice = "石頭"
             user_result = self.choice
-            computer_result = random.choice(["剪刀","石頭","布"])
+            #電腦判斷區
+            Dict = {"石頭":self.list.count("石頭"),"剪刀":self.list.count("剪刀"),"布":self.list.count("布")}
+            global computer_choice
+            if len(set(Dict.values())) == 1: #玩家三种出拳记录一样，电脑随机出拳
+                computer_choice = np.random.choice(["剪刀","石頭","布"])
+            elif len(set(Dict.values())) == 2:
+                m = min(Dict.values())
+                if list(Dict.values()).count(m) == 1: #两大一小，随机选择两大之一
+                    for key in Dict.keys():
+                        if Dict[key] == m:
+                            tempL = list(set(["石頭","剪刀","布",])-set([key,]))
+                            computer_choice = self.dict[np.random.choice(tempL)]
+                            break
+                else: #两小一大，直接取最大
+                    m = max(Dict.values())
+                    for key in Dict.keys():
+                        if Dict[key] == m:
+                            computer_choice = self.dict[key]
+                            break
+            else: #玩家三种出拳记录各不相等，取出拳次数最多的
+                m = max(Dict.values())
+                for key in Dict.keys():
+                    if Dict[key] == m:
+                        computer_choice = self.dict[key]
+                        break
+            self.list.append(self.choice)
+            computer_result = computer_choice
             embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description=f"<:trophy:1033707678654005358> 勝利場數: {self.win} 場")
             if ((computer_result == "布" and user_result == "剪刀") or (computer_result == "石頭" and user_result == "布") or (computer_result == "剪刀" and user_result == "石頭")): #玩家贏了
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
@@ -95,8 +150,33 @@ class Subscriptions(nextcord.ui.View):
             self.value = False
             self.choice = "布"
             user_result = self.choice
-            print(user_result)
-            computer_result = random.choice(["剪刀","石頭","布"])
+            #電腦判斷區
+            Dict = {"石頭":self.list.count("石頭"),"剪刀":self.list.count("剪刀"),"布":self.list.count("布")}
+            global computer_choice
+            if len(set(Dict.values())) == 1: #玩家三种出拳记录一样，电脑随机出拳
+                computer_choice = np.random.choice(["剪刀","石頭","布"])
+            elif len(set(Dict.values())) == 2:
+                m = min(Dict.values())
+                if list(Dict.values()).count(m) == 1: #两大一小，随机选择两大之一
+                    for key in Dict.keys():
+                        if Dict[key] == m:
+                            tempL = list(set(["石頭","剪刀","布",])-set([key,]))
+                            computer_choice = self.dict[np.random.choice(tempL)]
+                            break
+                else: #两小一大，直接取最大
+                    m = max(Dict.values())
+                    for key in Dict.keys():
+                        if Dict[key] == m:
+                            computer_choice = self.dict[key]
+                            break
+            else: #玩家三种出拳记录各不相等，取出拳次数最多的
+                m = max(Dict.values())
+                for key in Dict.keys():
+                    if Dict[key] == m:
+                        computer_choice = self.dict[key]
+                        break
+            self.list.append(self.choice)
+            computer_result = computer_choice
             embed = nextcord.Embed(color=nextcord.Colour.random(), title="🤖 | 剪刀石頭布",description=f"<:trophy:1033707678654005358> 勝利場數: {self.win} 場")
             if ((computer_result == "布" and user_result == "剪刀") or (computer_result == "石頭" and user_result == "布") or (computer_result == "剪刀" and user_result == "石頭")): #玩家贏了
                 embed.add_field(name="你出了", value="{}".format(user_result), inline=False)
