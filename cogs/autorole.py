@@ -1,6 +1,6 @@
 import nextcord
 import time
-from nextcord.ext import commands
+from nextcord.ext import commands,application_checks
 from nextcord import Interaction
 from nextcord import SelectOption
 from nextcord import Forbidden
@@ -72,18 +72,15 @@ class autorole(commands.Cog):
     print("Autorole Ready!")
 
   @nextcord.slash_command(name='autorole',description="自定義身分組")
+  @application_checks.has_permissions(manage_roles=True)
   async def autorole(self, interaction: Interaction):
+  
     embed = nextcord.Embed(title="設置你專屬的身分組",
                            description="點選以下的按鈕來設定ㄅ",
                            color=nextcord.Colour.random(),
                            timestamp=datetime.datetime.utcnow())
     view = View()
     await interaction.response.send_message(embed=embed, view=view)
-
-
-  async def cog_command_error(interaction: Interaction, error):
-    embed = nextcord.Embed(title=":x: 出現錯誤了!!!", description=f"```{error}```")
-    await interaction.response.send_message(embed=embed)
 
 
 def setup(bot):

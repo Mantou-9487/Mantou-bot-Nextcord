@@ -1,6 +1,6 @@
 import nextcord
 from typing import Optional
-from nextcord.ext import commands
+from nextcord.ext import commands,application_checks
 from nextcord import Interaction, SlashOption
 import pymongo
 import math
@@ -24,9 +24,14 @@ class ExceptionHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_application_command_error(self, interaction:Interaction, error) -> None:
-        embed = nextcord.Embed(title=":x: 阿喔，看來你用神奇魔法發現了一個漏洞 <:hahahaha:1038449572915187763>", description=f"```{error}```\n <a:853174934670540811:1038449712359022643> 已自動回報給作者! Bug反饋可以聯繫Man頭(´・ω・)#8870",colour=nextcord.Colour.red())
-        embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
-        await interaction.response.send_message(embed=embed)
+        print(error)
+        if isinstance(error, application_checks.ApplicationMissingPermissions):
+            embed = nextcord.Embed(title="<:x_mark:1033955039615664199> 無法執行此指令", description=f"請確認您是否有 `管理身分組` 的權限",colour=nextcord.Colour.red())
+            await interaction.response.send_message(embed=embed,ephemeral=True)
+        else:
+            embed = nextcord.Embed(title=":x: 阿喔，看來你用神奇魔法發現了一個漏洞 <:hahahaha:1038449572915187763>", description=f"```{error}```\n <a:853174934670540811:1038449712359022643> 已自動回報給作者! Bug反饋可以聯繫Man頭(´・ω・)#8870",colour=nextcord.Colour.red())
+            embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+            await interaction.response.send_message(embed=embed)
 
     @nextcord.slash_command(name='eval', description="噓~",guild_ids=[1003837176464810115])
     async def eval(self, interaction: Interaction, option:str = SlashOption(name="option",description="噓")):
