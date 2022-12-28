@@ -3,7 +3,7 @@ FROM python:3.10
 RUN mkdir /app
 
 #Copy stuff into /app
-COPY ./*.py /app
+COPY ./ /app
 
 WORKDIR /app
 
