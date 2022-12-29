@@ -10,7 +10,7 @@ import math
 
 class Subscriptions(nextcord.ui.View):
     def __init__(self):
-        super().__init__()
+        super().__init__(timeout=None)
         self.value = None
         self.win = 0
         self.lose = 0
