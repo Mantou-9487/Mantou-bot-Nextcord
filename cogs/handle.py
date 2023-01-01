@@ -37,9 +37,9 @@ class ExceptionHandler(commands.Cog):
     async def eval(self, interaction: Interaction, option:str = SlashOption(name="option",description="噓")):
 
         if interaction.user.id == 549056425943629825:
+            print(f"邪惡的結果: {eval(option)}")
             embed = nextcord.Embed(title=":white_check_mark: | 神秘的結果", description="```py\n{}```".format(eval(option)),colour=nextcord.Colour.green())
             await interaction.response.send_message(embed=embed)
-            print(f"邪惡的結果: {eval(option)}")
         else:
             embed = nextcord.Embed(title=":x: | 這個指令太過邪惡了,只有饅頭能夠駕馭他 (?")
             await interaction.response.send_message(embed=embed)
