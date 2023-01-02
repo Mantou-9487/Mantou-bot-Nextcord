@@ -22,7 +22,7 @@ class Subscriptions(nextcord.ui.View):
     @nextcord.ui.button(label= "✂️", style=nextcord.ButtonStyle.green)
     async def Scissors(self, button: nextcord.ui.Button, interaction:Interaction):
         if Player != str(interaction.user.id):
-            embed = nextcord.Embed(title=":x: | 你幹嘛自己點", colour=nextcord.Colour.red())
+            embed = nextcord.Embed(title=":x: | 又不是你在玩", colour=nextcord.Colour.red())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.response.send_message(embed=embed, ephemeral=True)
         if Player == str(interaction.user.id):
@@ -82,7 +82,7 @@ class Subscriptions(nextcord.ui.View):
     @nextcord.ui.button(label = "🪨", style=nextcord.ButtonStyle.red)
     async def rock(self, button: nextcord.ui.Button, interaction: Interaction):
         if Player != str(interaction.user.id):
-            embed = nextcord.Embed(title=":x: | 你幹嘛自己點", colour=nextcord.Colour.red())
+            embed = nextcord.Embed(title=":x: | 又不是你在玩", colour=nextcord.Colour.red())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.response.send_message(embed=embed, ephemeral=True)
         if Player == str(interaction.user.id):
@@ -142,7 +142,7 @@ class Subscriptions(nextcord.ui.View):
     @nextcord.ui.button(label = "🖐", style=nextcord.ButtonStyle.blurple)
     async def paper(self, button: nextcord.ui.Button, interaction: Interaction):
         if Player != str(interaction.user.id):
-            embed = nextcord.Embed(title=":x: | 你幹嘛自己點", colour=nextcord.Colour.red())
+            embed = nextcord.Embed(title=":x: | 又不是你在玩", colour=nextcord.Colour.red())
             embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
             await interaction.response.send_message(embed=embed, ephemeral=True)
         if Player == str(interaction.user.id):
