@@ -251,7 +251,7 @@ class AttackView(nextcord.ui.View):
             trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
             view = OverView()
             print("遊戲結束!")
-            embed = nextcord.Embed(title="{} | 遊戲結束!".format(trophyemoji),description="恭喜 {} 勝利!!!!!!!!!".format(interaction.user.name), colour=int(color, 16))
+            embed = nextcord.Embed(title="{} | 遊戲結束!".format(trophyemoji),description="恭喜 <@{}> 勝利!!!!!!!!!".format(victim), colour=int(color, 16))
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
         elif self.victim_hp <=0:
             inte = int("FFA500", 16)
@@ -259,7 +259,7 @@ class AttackView(nextcord.ui.View):
             trophyemoji = nextcord.utils.get(guild.emojis, name="trophy")
             view = OverView()
             print("遊戲結束!")
-            embed = nextcord.Embed(title="{} | 遊戲結束!".format(trophyemoji),description="恭喜 {} 勝利!!!!!!!!!".format(interaction.user.name), colour=int(color,16))
+            embed = nextcord.Embed(title="{} | 遊戲結束!".format(trophyemoji),description="恭喜 <@{}> 勝利!!!!!!!!!".format(attacker), colour=int(color,16))
             await interaction.followup.edit_message(message_id=message_fetch.id ,embed=embed, view=view)
 
 class OverView(nextcord.ui.View):
