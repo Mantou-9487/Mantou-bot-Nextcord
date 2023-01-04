@@ -78,7 +78,7 @@ class TicketView(nextcord.ui.View):
                     tw_zone = pytz.timezone('ROC')
                     created_at =  datetime.datetime.strptime(msgdate_date, "%Y/%m/%d %H:%M:%S").replace(tzinfo=from_zone)
                     central = created_at.astimezone(tw_zone)
-                    chat.write(f"{central} - {message.author.display_name}: {message.clean_content}\n")
+                    chat.write(f"{central} - {message.author.display_name}: {message.content}\n")
             ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
             overwrites = {
                     interaction.guild.default_role: nextcord.PermissionOverwrite(read_messages=False),
