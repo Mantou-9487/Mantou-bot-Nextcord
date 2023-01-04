@@ -51,14 +51,14 @@ json = {
 }
 
 json1 = {
-    "name": "旗幟",
-    "description": "透過ID查別人",
+    "name": "客服單",
+    "description": "創建一個可供你和管理員聯繫的頻道",
     "type": 1,
     "options": [
             {
-            "name": "target",
+            "name": "客服單內文",
             "type": 1,
-            "description": "放你要查的人ID",
+            "description": "設定您想給大家知道用途的介紹文字 (留空自動生成)",
             "required": True,
         }
     ]
