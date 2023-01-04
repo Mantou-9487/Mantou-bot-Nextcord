@@ -95,7 +95,7 @@ class TicketView(nextcord.ui.View):
             else:
                 await interaction.response.send_message(f"此頻道已經被鎖定了!",ephemeral=True)
         else:
-            await interaction.response.send_message("你無法鎖定客服單! 請聯繫管理人員以尋求協助")
+            await interaction.response.send_message("你無法鎖定客服單! 請聯繫管理人員以尋求協助",ephemeral=True)
         
 
 
@@ -112,7 +112,7 @@ class TicketView(nextcord.ui.View):
                 failed_embed = nextcord.Embed(title="<:x_mark:1033955039615664199> | 請先鎖定客服單後再按按鈕",colour=nextcord.Colour.red())
                 await interaction.response.send_message(embed=failed_embed,ephemeral=True)
         else:
-            await interaction.response.send_message("你無法刪除客服單! 請聯繫管理人員以尋求協助")
+            await interaction.response.send_message("你無法刪除客服單! 請聯繫管理人員以尋求協助",ephemeral=True)
 
 
 class ticket(commands.Cog):
