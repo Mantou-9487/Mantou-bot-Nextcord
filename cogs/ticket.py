@@ -1,6 +1,7 @@
 import nextcord
 import time
 import datetime
+import pytz
 import os
 from nextcord.ext import commands,application_checks
 from nextcord import Interaction
@@ -31,13 +32,15 @@ class View(nextcord.ui.View):
                     interaction.guild.default_role: nextcord.PermissionOverwrite(read_messages=False),
                     interaction.guild.me: nextcord.PermissionOverwrite(read_messages=True)
                 }
-                channel = await interaction.guild.create_text_channel(f"客服單-{interaction.user.name}",overwrites=overwrites)
+                channel = await interaction.guild.create_text_channel(f"客服單-{interaction.user.name}",overwrites=overwrites,category=set_channel.category)
                 success_embed = nextcord.Embed(title="<:check:1036160202174627840> | 成功創建!",description=f"你的頻道在 {channel.mention}",colour=nextcord.Colour.green())
                 await msg.edit(embed=success_embed)
                 channel_embed = nextcord.Embed(title=f"{interaction.user.name} 的客服單",description="請等待人員處理您的問題")
                 view = TicketView()
                 member = interaction.user
-                await channel.send(content=f"{member.mention}",embed=channel_embed,view=view)
+                message = await channel.send(content=f"{member.mention}")
+                await message.delete()
+                await channel.send(embed=channel_embed,view=view)
         except UnboundLocalError: #真正執行的地方
                 loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在創建中...",colour=nextcord.Colour.light_grey())
                 msg = await interaction.response.send_message(embed=loading_embed,ephemeral=True)
@@ -51,7 +54,9 @@ class View(nextcord.ui.View):
                 channel_embed = nextcord.Embed(title=f"{interaction.user.name} 的客服單",description="請等待人員處理您的問題")
                 view = TicketView()
                 member = interaction.user
-                await channel.send(content=f"{member.mention}",embed=channel_embed,view=view)
+                message = await channel.send(content=f"{member.mention}")
+                await message.delete()
+                await channel.send(embed=channel_embed,view=view)
 class TicketView(nextcord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -60,19 +65,22 @@ class TicketView(nextcord.ui.View):
     @nextcord.ui.button(label="鎖定客服單",style=nextcord.ButtonStyle.blurple)
     async def lock_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
         if self.lock == True:
-            conversation_record = channel.history(limit=None)
+            conversation_record = channel.history(limit=None,)
             with open(f"chat.txt",'w',encoding='UTF-8') as chat:
                 async for message in conversation_record:
-                        msgdate_time = ((str(message.created_at.hour) +":"+ str(message.created_at.minute)))
-                        msgdate_date = (str(message.created_at.date()).replace('-','/') + ' '+ msgdate_time)
-                        created_at =  datetime.datetime.strptime(msgdate_date, "%Y/%m/%d %H:%M")
-                        if "饅頭機機人#2692" in message.author.name:
-                            print(message.author.name)
-                            break
-                        else:
-                            chat.write(f"{created_at} - {message.author.display_name}: {message.clean_content}\n")
+                    tzone = datetime.timezone(datetime.timedelta(hours=8))
+                    message.created_at.astimezone(tzone)
+                    print(message.created_at.hour)
+                    msgdate_time = ((str(message.created_at.hour) +":"+ str(message.created_at.minute)+":"+ str(message.created_at.second)))
+                    msgdate_date = (str(message.created_at.date()).replace('-','/') + ' '+ msgdate_time)
+                    from_zone = pytz.timezone('UTC')
+                    tw_zone = pytz.timezone('ROC')
+                    created_at =  datetime.datetime.strptime(msgdate_date, "%Y/%m/%d %H:%M:%S").replace(tzinfo=from_zone)
+                    central = created_at.astimezone(tw_zone)
+                    chat.write(f"{central} - {message.author.display_name}: {message.clean_content}\n")
             ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
             overwrites = {
+                    interaction.guild.default_role: nextcord.PermissionOverwrite(read_messages=False),
                     interaction.guild.me: nextcord.PermissionOverwrite(read_messages=False)
                 }
             await ticket_channel.edit(overwrites=overwrites)
@@ -88,7 +96,7 @@ class TicketView(nextcord.ui.View):
 
     @nextcord.ui.button(label="刪除客服單",style=nextcord.ButtonStyle.red)
     async def delete_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if self.lock == True:
+        if self.lock == None:
             ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
             loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在刪除...",colour=nextcord.Colour.light_grey())
             await interaction.response.send_message(embed=loading_embed)
@@ -107,7 +115,7 @@ class ticket(commands.Cog):
     async def on_ready(self):
         self.bot.add_view(View())
         print("Ticket Ready!")
-    @nextcord.slash_command(name="客服單",description="創建一個可供你和管理員聯繫的頻道")
+    @nextcord.slash_command(name="ticket",description="創建一個可供你和管理員聯繫的頻道")
     @application_checks.has_permissions(manage_messages=True)
     async def ticket(self, interaction: Interaction, option = SlashOption(name="客服單內文",description="設定您想給大家知道用途的介紹文字 (留空自動生成)",required=False)):
         if option != None:

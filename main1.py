@@ -51,7 +51,7 @@ json = {
 }
 
 json1 = {
-    "name": "客服單",
+    "name": "ticket",
     "description": "創建一個可供你和管理員聯繫的頻道",
     "type": 1,
     "options": [
