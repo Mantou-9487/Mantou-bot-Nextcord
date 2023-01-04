@@ -107,8 +107,8 @@ class ticket(commands.Cog):
     async def on_ready(self):
         self.bot.add_view(View())
         print("Ticket Ready!")
-    
     @nextcord.slash_command(name="客服單",description="創建一個可供你和管理員聯繫的頻道")
+    @application_checks.has_permissions(manage_messages=True)
     async def ticket(self, interaction: Interaction, option = SlashOption(name="客服單內文",description="設定您想給大家知道用途的介紹文字 (留空自動生成)",required=False)):
         if option != None:
             embed = nextcord.Embed(title="開啟客服單的系統",description=f"{option}",colour=nextcord.Colour.orange())
