@@ -66,7 +66,7 @@ class TicketView(nextcord.ui.View):
     
     @nextcord.ui.button(label="鎖定客服單",style=nextcord.ButtonStyle.blurple)
     async def lock_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if interaction.user.guild_permissions.manage_channels:
+        if interaction.guild.get_member(interaction.user.id).guild_permissions.manage_channels == True:
             if self.lock == True:
                 conversation_record = channel.history(limit=None)
                 with open(f"chat.txt",'w',encoding='UTF-8') as chat:
@@ -102,7 +102,7 @@ class TicketView(nextcord.ui.View):
 
     @nextcord.ui.button(label="刪除客服單",style=nextcord.ButtonStyle.red)
     async def delete_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if interaction.user.guild_permissions.manage_channels:
+        if interaction.guild.get_member(interaction.user.id).guild_permissions.manage_channels == True:
             if self.lock == None:
                 ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
                 loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在刪除...",colour=nextcord.Colour.light_grey())
