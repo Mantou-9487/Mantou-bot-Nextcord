@@ -66,47 +66,53 @@ class TicketView(nextcord.ui.View):
     
     @nextcord.ui.button(label="鎖定客服單",style=nextcord.ButtonStyle.blurple)
     async def lock_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if self.lock == True:
-            conversation_record = channel.history(limit=None)
-            with open(f"chat.txt",'w',encoding='UTF-8') as chat:
-                async for message in conversation_record:
-                    tzone = datetime.timezone(datetime.timedelta(hours=8))
-                    message.created_at.astimezone(tzone)
-                    print(message.created_at.hour)
-                    msgdate_time = ((str(message.created_at.hour) +":"+ str(message.created_at.minute)+":"+ str(message.created_at.second)))
-                    msgdate_date = (str(message.created_at.date()).replace('-','/') + ' '+ msgdate_time)
-                    from_zone = pytz.timezone('UTC')
-                    tw_zone = pytz.timezone('ROC')
-                    created_at =  datetime.datetime.strptime(msgdate_date, "%Y/%m/%d %H:%M:%S").replace(tzinfo=from_zone)
-                    central = created_at.astimezone(tw_zone)
-                    chat.write(f"{central} - {message.author.display_name}: {message.content}\n")
-            ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
-            overwrites = {
-                    interaction.guild.default_role: nextcord.PermissionOverwrite(view_channel=False),
-                    interaction.guild.me: nextcord.PermissionOverwrite(view_channel=False),
-                    interaction.user: nextcord.PermissionOverwrite(view_channel=False)
-                }
-            await ticket_channel.edit(overwrites=overwrites)
-            await interaction.response.send_message(f"客服單已被 {interaction.user.name} 鎖定!")
-            await interaction.followup.send(f"本次對話紀錄檔案:",file=nextcord.File(f"chat.txt"))
-            os.remove(f"chat.txt")
-            self.lock = None
+        if interaction.user.guild_permissions.manage_channels != True:
+            await interaction.response.send_message("你無法鎖定客服單! 請聯繫負責的人員")
         else:
-            await interaction.response.send_message(f"此頻道已經被鎖定了!",ephemeral=True)
+            if self.lock == True:
+                conversation_record = channel.history(limit=None)
+                with open(f"chat.txt",'w',encoding='UTF-8') as chat:
+                    async for message in conversation_record:
+                        tzone = datetime.timezone(datetime.timedelta(hours=8))
+                        message.created_at.astimezone(tzone)
+                        print(message.created_at.hour)
+                        msgdate_time = ((str(message.created_at.hour) +":"+ str(message.created_at.minute)+":"+ str(message.created_at.second)))
+                        msgdate_date = (str(message.created_at.date()).replace('-','/') + ' '+ msgdate_time)
+                        from_zone = pytz.timezone('UTC')
+                        tw_zone = pytz.timezone('ROC')
+                        created_at =  datetime.datetime.strptime(msgdate_date, "%Y/%m/%d %H:%M:%S").replace(tzinfo=from_zone)
+                        central = created_at.astimezone(tw_zone)
+                        chat.write(f"{central} - {message.author.display_name}: {message.content}\n")
+                ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
+                overwrites = {
+                        interaction.guild.default_role: nextcord.PermissionOverwrite(view_channel=False),
+                        interaction.guild.me: nextcord.PermissionOverwrite(view_channel=False),
+                        interaction.user: nextcord.PermissionOverwrite(view_channel=False)
+                    }
+                await ticket_channel.edit(overwrites=overwrites)
+                await interaction.response.send_message(f"客服單已被 {interaction.user.name} 鎖定!")
+                await interaction.followup.send(f"本次對話紀錄檔案:",file=nextcord.File(f"chat.txt"))
+                os.remove(f"chat.txt")
+                self.lock = None
+            else:
+                await interaction.response.send_message(f"此頻道已經被鎖定了!",ephemeral=True)
         
 
 
 
     @nextcord.ui.button(label="刪除客服單",style=nextcord.ButtonStyle.red)
     async def delete_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if self.lock == None:
-            ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
-            loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在刪除...",colour=nextcord.Colour.light_grey())
-            await interaction.response.send_message(embed=loading_embed)
-            await ticket_channel.delete()
+        if interaction.user.guild_permissions.manage_channels != True:
+            await interaction.response.send_message("你無法鎖定客服單! 請聯繫負責的人員")
         else:
-            failed_embed = nextcord.Embed(title="<:x_mark:1033955039615664199> | 請先鎖定客服單後再按按鈕",colour=nextcord.Colour.red())
-            await interaction.response.send_message(embed=failed_embed,ephemeral=True)
+            if self.lock == None:
+                ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
+                loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在刪除...",colour=nextcord.Colour.light_grey())
+                await interaction.response.send_message(embed=loading_embed)
+                await ticket_channel.delete()
+            else:
+                failed_embed = nextcord.Embed(title="<:x_mark:1033955039615664199> | 請先鎖定客服單後再按按鈕",colour=nextcord.Colour.red())
+                await interaction.response.send_message(embed=failed_embed,ephemeral=True)
 
 
 class ticket(commands.Cog):
