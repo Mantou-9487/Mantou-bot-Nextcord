@@ -46,8 +46,9 @@ class View(nextcord.ui.View):
                 loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在創建中...",colour=nextcord.Colour.light_grey())
                 msg = await interaction.response.send_message(embed=loading_embed,ephemeral=True)
                 overwrites = {
-                    interaction.guild.default_role: nextcord.PermissionOverwrite(read_messages=False),
-                    interaction.guild.me: nextcord.PermissionOverwrite(read_messages=True)
+                    interaction.guild.default_role: nextcord.PermissionOverwrite(view_channel=False),
+                    interaction.guild.me: nextcord.PermissionOverwrite(view_channel=True,send_messages=True,attach_files=True,embed_links=True),
+                    interaction.user: nextcord.PermissionOverwrite(view_channel=True, send_messages=True,read_message_history=True)
                 }
                 channel = await interaction.guild.create_text_channel(f"客服單-{interaction.user.name}",overwrites=overwrites,category=set_channel.category)
                 success_embed = nextcord.Embed(title="<:check:1036160202174627840> | 成功創建!",description=f"你的頻道在 {channel.mention}",colour=nextcord.Colour.green())
