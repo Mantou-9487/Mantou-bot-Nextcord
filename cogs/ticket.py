@@ -31,7 +31,7 @@ class View(nextcord.ui.View):
                 overwrites = {
                     interaction.guild.default_role: nextcord.PermissionOverwrite(view_channel=False),
                     interaction.guild.me: nextcord.PermissionOverwrite(view_channel=True,send_messages=True,attach_files=True,embed_links=True),
-                    interaction.user: nextcord.PermissionOverwrite(view_channel=True, send_messages=True,read_message_history=True)
+                    interaction.user: nextcord.PermissionOverwrite(view_channel=True)
                 }
                 channel = await interaction.guild.create_text_channel(f"客服單-{interaction.user.name}",overwrites=overwrites,category=set_channel.category)
                 success_embed = nextcord.Embed(title="<:check:1036160202174627840> | 成功創建!",description=f"你的頻道在 {channel.mention}",colour=nextcord.Colour.green())
@@ -48,7 +48,7 @@ class View(nextcord.ui.View):
                 overwrites = {
                     interaction.guild.default_role: nextcord.PermissionOverwrite(view_channel=False),
                     interaction.guild.me: nextcord.PermissionOverwrite(view_channel=True,send_messages=True,attach_files=True,embed_links=True),
-                    interaction.user: nextcord.PermissionOverwrite(view_channel=True, send_messages=True,read_message_history=True)
+                    interaction.user: nextcord.PermissionOverwrite(view_channel=True)
                 }
                 channel = await interaction.guild.create_text_channel(f"客服單-{interaction.user.name}",overwrites=overwrites,category=set_channel.category)
                 success_embed = nextcord.Embed(title="<:check:1036160202174627840> | 成功創建!",description=f"你的頻道在 {channel.mention}",colour=nextcord.Colour.green())
@@ -66,7 +66,7 @@ class TicketView(nextcord.ui.View):
     
     @nextcord.ui.button(label="鎖定客服單",style=nextcord.ButtonStyle.blurple)
     async def lock_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if interaction.guild.get_member(interaction.user.id).guild_permissions.manage_channels == True:
+        if interaction.guild.get_member(interaction.user.id).guild_permissions.manage_channels == True: 
             if self.lock == True:
                 conversation_record = channel.history(limit=None)
                 with open(f"chat.txt",'w',encoding='UTF-8') as chat:
