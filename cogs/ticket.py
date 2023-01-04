@@ -64,7 +64,7 @@ class TicketView(nextcord.ui.View):
         super().__init__(timeout=None)
         self.lock = True
     
-    @nextcord.ui.button(label="鎖定客服單",style=nextcord.ButtonStyle.blurple)
+    @nextcord.ui.button(label="鎖定客服單",style=nextcord.ButtonStyle.blurple,custom_id="lock_ticket")
     async def lock_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
         if interaction.guild.get_member(interaction.user.id).guild_permissions.manage_channels == True: 
             if self.lock == True:
@@ -100,7 +100,7 @@ class TicketView(nextcord.ui.View):
 
 
 
-    @nextcord.ui.button(label="刪除客服單",style=nextcord.ButtonStyle.red)
+    @nextcord.ui.button(label="刪除客服單",style=nextcord.ButtonStyle.red,custom_id="del_ticket")
     async def delete_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
         if interaction.guild.get_member(interaction.user.id).guild_permissions.manage_channels == True:
             if self.lock == None:
@@ -123,6 +123,7 @@ class ticket(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.bot.add_view(View())
+        self.bot.add_view(TicketView())
         print("Ticket Ready!")
     @nextcord.slash_command(name="ticket",description="創建一個可供你和管理員聯繫的頻道")
     @application_checks.has_permissions(manage_messages=True)
