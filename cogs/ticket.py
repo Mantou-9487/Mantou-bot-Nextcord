@@ -66,9 +66,7 @@ class TicketView(nextcord.ui.View):
     
     @nextcord.ui.button(label="鎖定客服單",style=nextcord.ButtonStyle.blurple)
     async def lock_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if interaction.user.guild_permissions.manage_channels != True:
-            await interaction.response.send_message("你無法鎖定客服單! 請聯繫負責的人員")
-        else:
+        if interaction.user.guild_permissions.manage_channels:
             if self.lock == True:
                 conversation_record = channel.history(limit=None)
                 with open(f"chat.txt",'w',encoding='UTF-8') as chat:
@@ -96,15 +94,15 @@ class TicketView(nextcord.ui.View):
                 self.lock = None
             else:
                 await interaction.response.send_message(f"此頻道已經被鎖定了!",ephemeral=True)
+        else:
+            await interaction.response.send_message("你無法鎖定客服單! 請聯繫管理人員以尋求協助")
         
 
 
 
     @nextcord.ui.button(label="刪除客服單",style=nextcord.ButtonStyle.red)
     async def delete_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
-        if interaction.user.guild_permissions.manage_channels != True:
-            await interaction.response.send_message("你無法鎖定客服單! 請聯繫負責的人員")
-        else:
+        if interaction.user.guild_permissions.manage_channels:
             if self.lock == None:
                 ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
                 loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在刪除...",colour=nextcord.Colour.light_grey())
@@ -113,6 +111,8 @@ class TicketView(nextcord.ui.View):
             else:
                 failed_embed = nextcord.Embed(title="<:x_mark:1033955039615664199> | 請先鎖定客服單後再按按鈕",colour=nextcord.Colour.red())
                 await interaction.response.send_message(embed=failed_embed,ephemeral=True)
+        else:
+            await interaction.response.send_message("你無法刪除客服單! 請聯繫管理人員以尋求協助")
 
 
 class ticket(commands.Cog):
