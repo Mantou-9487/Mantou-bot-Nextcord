@@ -81,8 +81,9 @@ class TicketView(nextcord.ui.View):
                     chat.write(f"{central} - {message.author.display_name}: {message.content}\n")
             ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
             overwrites = {
-                    interaction.guild.default_role: nextcord.PermissionOverwrite(read_messages=False),
-                    interaction.guild.me: nextcord.PermissionOverwrite(read_messages=False)
+                    interaction.guild.default_role: nextcord.PermissionOverwrite(view_channel=False),
+                    interaction.guild.me: nextcord.PermissionOverwrite(view_channel=False),
+                    interaction.user: nextcord.PermissionOverwrite(view_channel=False)
                 }
             await ticket_channel.edit(overwrites=overwrites)
             await interaction.response.send_message(f"客服單已被 {interaction.user.name} 鎖定!")
