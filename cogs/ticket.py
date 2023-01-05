@@ -68,7 +68,11 @@ class TicketView(nextcord.ui.View):
     async def lock_ticket(self, button: nextcord.ui.Button, interaction:Interaction):
         if interaction.guild.get_member(interaction.user.id).guild_permissions.manage_channels == True: 
             if self.lock == True:
-                conversation_record = channel.history(limit=None)
+                try:
+                    conversation_record = channel.history(limit=None)
+                except NameError:
+                    ticket_channel = nextcord.utils.get(interaction.guild.text_channels,id=channel.id)
+                    conversation_record = ticket_channel.history(limit=None)
                 with open(f"chat.txt",'w',encoding='UTF-8') as chat:
                     async for message in conversation_record:
                         tzone = datetime.timezone(datetime.timedelta(hours=8))
