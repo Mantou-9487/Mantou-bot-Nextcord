@@ -162,6 +162,12 @@ class Info(commands.Cog):
             except AttributeError:
                 embed = nextcord.Embed(title=f"<:x_mark:1033955039615664199> | 指定的使用者沒有旗幟!",colour=nextcord.Colour.red())
                 await interaction.response.send_message(embed=embed)
+
+    @nextcord.slash_command(name="credit",description="查看協助的工作人員")
+    async def credit(self,interaction:Interaction):
+        embed = nextcord.Embed(title="工作人員名單",colour=nextcord.Colour.orange())
+        embed.add_field("開發人員",value="Man頭(´・ω・)#8870")
+        embed.add_field("感謝名單",value="凱恩Kane#5384\n待新增...")
                 
 def setup(bot):
     bot.add_cog(Info(bot))
