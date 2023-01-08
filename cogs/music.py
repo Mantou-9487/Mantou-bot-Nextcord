@@ -538,7 +538,7 @@ class Music(commands.Cog):
       elif vc.is_playing() == False:
         await interaction.response.send_message("沒有歌再撥放!",ephemeral=True)
 
-    @nextcord.slash_command(name='disconnect',description="中斷我的連線",name_localizations={"zh-TW":"中斷連線"},guild_ids=[1003837176464810115])
+    @nextcord.slash_command(name='disconnect',description="中斷我的連線",name_localizations={"zh-TW":"中斷連線"})
     async def disconnect(self, interaction: Interaction):
         vc: wavelink.Player = interaction.guild.voice_client
         if vc:
@@ -547,7 +547,7 @@ class Music(commands.Cog):
         else:
           await interaction.response.send_message("我不再一個語音頻道!",ephemeral=True)
     
-    @nextcord.slash_command(name='join',description="加入語音頻道",name_localizations={"zh-TW":"加入頻道"},guild_ids=[1003837176464810115])
+    @nextcord.slash_command(name='join',description="加入語音頻道",name_localizations={"zh-TW":"加入頻道"})
     async def join(self, interaction: Interaction):
         vc: wavelink.Player = interaction.guild.voice_client
         if vc:
