@@ -69,7 +69,7 @@ class Info(commands.Cog):
         self.bot = bot
         super().__init__()
 
-    @nextcord.slash_command(name="查看使用者資訊",description="透過ID查別人")
+    @nextcord.slash_command(name="info",description="透過ID查別人",name_localizations={"zh-TW":"查看使用者資訊"})
     async def userinfo(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID",required=True)):
         global member
         member = target
@@ -103,7 +103,7 @@ class Info(commands.Cog):
             embed.set_thumbnail(url=target.avatar.url)
             await interaction.response.send_message(embed=embed)
         
-    @nextcord.slash_command(name="頭貼",description="透過ID查別人",force_global=True)
+    @nextcord.slash_command(name="avatar",description="透過ID查別人",force_global=True,name_localizations={"zh-TW":"頭像"})
     async def avatar(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID")):
         global member
         member = target
@@ -126,7 +126,7 @@ class Info(commands.Cog):
             await interaction.response.send_message(embed=embed, view=view)
     
 
-    @nextcord.slash_command(name="旗幟",description="透過ID查別人",force_global=True)
+    @nextcord.slash_command(name="banner",description="透過ID查別人",force_global=True,name_localizations={"zh-TW":"旗幟"})
     async def banner(self,interaction:Interaction, target:Optional[Member] = SlashOption(description="放你要查的人ID")):
         global member
         global guild_target

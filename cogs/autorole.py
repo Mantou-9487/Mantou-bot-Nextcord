@@ -71,9 +71,9 @@ class autorole(commands.Cog):
     self.bot.add_view(View())
     print("Autorole Ready!")
 
-  @nextcord.slash_command(name='autorole',description="自定義身分組")
+  @nextcord.slash_command(name='customrole',description="自定義身分組",name_localizations={"zh-TW":"自訂身分組"})
   @application_checks.has_permissions(manage_roles=True)
-  async def autorole(self, interaction: Interaction):
+  async def customrole(self, interaction: Interaction):
   
     embed = nextcord.Embed(title="設置你專屬的身分組",
                            description="點選以下的按鈕來設定ㄅ",

@@ -1,13 +1,15 @@
 import asyncio
 import aiohttp
 import wavelink
+import typing
 import nextcord
 import urllib.request
 import json
 from nextcord import Interaction
 from nextcord import SlashOption
-from nextcord.ext import commands
+from nextcord.ext import commands,application_checks
 from wavelink.ext import spotify
+from youtubesearchpython import VideosSearch
 import sys
 import codecs
 import time
@@ -304,11 +306,43 @@ class Playerview(nextcord.ui.View):
           embed.set_footer(text="機器人作者by 鰻頭", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
           await interaction.response.send_message(embed=embed, ephemeral=True)
 
-
-class CustomPlayer(wavelink.Player):
+class Dropdown(nextcord.ui.Select):
   def __init__(self):
-     self.queue = wavelink.Queue()
-     self.node = wavelink.NodePool.get_node()
+    options = []
+    videosSearch = VideosSearch(wait_song, limit = 20)
+    for i in videosSearch.result()["result"]:
+      video_title = (i["title"])
+      video_link = (i["link"])
+      option = nextcord.SelectOption(label=video_title,value=video_link)
+      options.append(option)
+      super().__init__(placeholder='選擇一首歌', min_values=1,max_values=1, options=options)
+
+  async def callback(self ,interaction: Interaction):
+    view = Playerview()
+    vc: wavelink.Player = interaction.guild.voice_client
+    try:
+        node = wavelink.NodePool.get_node(identifier='Main1')
+        search = await wavelink.YouTubeTrack.search(query=self.values[0], return_first=True,node=node)
+    except nextcord.errors.ApplicationInvokeError or aiohttp.ClientConnectorError:
+        node = wavelink.NodePool.get_node(identifier='Main')
+        search = await wavelink.YouTubeTrack.search(query=self.values[0], return_first=True,node=node)
+    await vc.play(search)
+    track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+    yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
+    url = track.uri
+    sec = track.length
+    length_time = "%02d:%02d" %divmod(sec, 60)
+    print(track.info)
+    embed = nextcord.Embed(title="{}".format(search.title), description="00:00 / {0}".format(length_time) ,colour=nextcord.Colour.random(),url=url)
+    embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+    embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
+    embed.set_thumbnail(yttrack.thumbnail)
+    await message.edit(content="▶ | 開始播放", embed=embed ,view=view)
+
+class SelectView(nextcord.ui.View):
+  def __init__(self):
+      super().__init__(timeout=None)
+      self.add_item(Dropdown())
 
 class Music(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -341,17 +375,19 @@ class Music(commands.Cog):
         """Event fired when a node has finished connecting."""
         print(f'Node: <{node.identifier}> is ready!')
 
+
     @nextcord.slash_command(name='play',description="播個音樂")
-    async def play(self, interaction: Interaction, song:str = SlashOption(description="Song Name")):
+    async def play(self, interaction: Interaction, song:str = nextcord.SlashOption(name="關鍵字or網址",description="以歌曲的名稱或連結搜索音樂")):
         global here_song
         global say
         global wait_song
+        global message
         global message_fetch
         global track_end
         track_end = self.track_end
         say = interaction
-        here_song = self.here_song
         wait_song = song
+        here_song = self.here_song
         space = song.rstrip(" ")
         print("hay2")
         view = Playerview()
@@ -371,28 +407,56 @@ class Music(commands.Cog):
             decoded = spotify.decode_url(song)
             if decoded and decoded['type'] is spotify.SpotifySearchType.track:
               search = await spotify.SpotifyTrack.search(query=decoded["id"], type=decoded["type"])
-          else:
+          elif space.startswith("https://www.youtube.com/watch?v="):
             try:
-              node = wavelink.NodePool.get_node(identifier='Main1')
-              search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
-            except nextcord.errors.ApplicationInvokeError or aiohttp.ClientConnectorError:
               node = wavelink.NodePool.get_node(identifier='Main')
               search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
-          now_search = search
-          await vc.play(search)
-          track = wavelink.Track(id=vc.track.id, info=vc.track.info)
-          yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
-          url = track.uri
-          sec = track.length
-          length_time = "%02d:%02d" %divmod(sec, 60)
-          print(track.info)
-          embed = nextcord.Embed(title="{}".format(search.title), description="00:00 / {0}".format(length_time) ,colour=nextcord.Colour.random(),url=url)
-          embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
-          embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
-          embed.set_thumbnail(yttrack.thumbnail)
-          message = await interaction.response.send_message("▶ | 開始播放", embed=embed ,view=view)
-          message_fetch = await message.fetch()
-          await view.wait()
+              now_search = search
+              await vc.play(search)
+              track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+              yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
+              url = track.uri
+              sec = track.length
+              length_time = "%02d:%02d" %divmod(sec, 60)
+              loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在讀取中...",colour=nextcord.Colour.light_grey())
+              loading_embed.set_footer(text="讀取較久為正常現象,如一段時間後仍無反應請至支援群組回報")
+              message = await interaction.response.send_message(embed=loading_embed)
+              embed = nextcord.Embed(title="{}".format(search.title), description="00:00 / {0}".format(length_time) ,colour=nextcord.Colour.random(),url=url)
+              embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+              embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
+              embed.set_thumbnail(yttrack.thumbnail)
+              await message.edit("▶ | 開始播放", embed=embed ,view=view)
+              await view.wait()
+            except nextcord.errors.ApplicationInvokeError or aiohttp.ClientConnectorError or wavelink.errors.NoMatchingNode:
+              node = wavelink.NodePool.get_node(identifier='Main1')
+              search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
+              now_search = search
+              await vc.play(search)
+              track = wavelink.Track(id=vc.track.id, info=vc.track.info)
+              yttrack = wavelink.YouTubeTrack(id=vc.track.id, info=vc.track.info)
+              url = track.uri
+              sec = track.length
+              length_time = "%02d:%02d" %divmod(sec, 60)
+              print(track.info)
+              loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在讀取中...",colour=nextcord.Colour.light_grey())
+              loading_embed.set_footer(text="讀取較久為正常現象,如一段時間後仍無反應請至支援群組回報")
+              message = await interaction.response.send_message(embed=loading_embed)
+              embed = nextcord.Embed(title="{}".format(search.title), description="00:00 / {0}".format(length_time) ,colour=nextcord.Colour.random(),url=url)
+              embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
+              embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
+              embed.set_thumbnail(yttrack.thumbnail)
+              await message.edit("▶ | 開始播放", embed=embed ,view=view)
+              message_fetch = await message.fetch()
+              await view.wait()
+          else:
+            loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在讀取中...",colour=nextcord.Colour.light_grey())
+            loading_embed.set_footer(text="讀取較久為正常現象,如一段時間後仍無反應請至支援群組回報")
+            message = await interaction.response.send_message(embed=loading_embed)
+            view = SelectView()
+            embed = nextcord.Embed(title="請選擇一首歌",colour=nextcord.Colour.random())
+            await message.edit(embed=embed,view=view)
+            message_fetch = await message.fetch()
+            await view.wait()
         else:
           global title
           wait_song = song
@@ -401,7 +465,12 @@ class Music(commands.Cog):
           if space.startswith("https://open.spotify.com/"):
             search = await spotify.SpotifyTrack.search(query=song)
           else:
-            search = await wavelink.YouTubeTrack.search(query=song, return_first=True)
+            try:
+              node = wavelink.NodePool.get_node(identifier='Main')
+              search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
+            except nextcord.errors.ApplicationInvokeError or aiohttp.ClientConnectorError or wavelink.errors.NoMatchingNode:
+              node = wavelink.NodePool.get_node(identifier='Main1')
+              search = await wavelink.YouTubeTrack.search(query=song, return_first=True,node=node)
           await vc.queue.put_wait(search)
           api = "AIzaSyDhxhd0wQL3q2TMBo0QD5WVV_rqpwJwP4A"
           id = space.removeprefix("https://www.youtube.com/watch?v=")
@@ -469,6 +538,23 @@ class Music(commands.Cog):
       elif vc.is_playing() == False:
         await interaction.response.send_message("沒有歌再撥放!",ephemeral=True)
 
+    @nextcord.slash_command(name='disconnect',description="中斷我的連線",name_localizations={"zh-TW":"中斷連線"},guild_ids=[1003837176464810115])
+    async def disconnect(self, interaction: Interaction):
+        vc: wavelink.Player = interaction.guild.voice_client
+        if vc:
+          await vc.disconnect()
+          await interaction.response.send_message("我被中斷連線了QAQ")
+        else:
+          await interaction.response.send_message("我不再一個語音頻道!",ephemeral=True)
+    
+    @nextcord.slash_command(name='join',description="加入語音頻道",name_localizations={"zh-TW":"加入頻道"},guild_ids=[1003837176464810115])
+    async def join(self, interaction: Interaction):
+        vc: wavelink.Player = interaction.guild.voice_client
+        if vc:
+          await interaction.response.send_message("我已經在語音頻道裡了!!",ephemeral=True)
+        else:
+          await interaction.user.voice.channel.connect(cls=wavelink.Player)
+          await interaction.response.send_message(f"我加入了 {interaction.user.voice.channel.mention}")
 
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track:wavelink.YouTubeTrack, reason):

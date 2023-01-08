@@ -129,7 +129,8 @@ class ticket(commands.Cog):
         self.bot.add_view(View())
         self.bot.add_view(TicketView())
         print("Ticket Ready!")
-    @nextcord.slash_command(name="ticket",description="創建一個可供你和管理員聯繫的頻道")
+    
+    @nextcord.slash_command(name="ticket",description="創建一個可供你和管理員聯繫的頻道",name_localizations={"zh-TW":"客服單"})
     @application_checks.has_permissions(manage_messages=True)
     async def ticket(self, interaction: Interaction, option = SlashOption(name="客服單內文",description="設定您想給大家知道用途的介紹文字 (留空自動生成)",required=False)):
         if option != None:

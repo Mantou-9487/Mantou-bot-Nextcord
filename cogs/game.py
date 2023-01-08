@@ -202,8 +202,8 @@ class game(commands.Cog):
     def __init__(self, bot:commands.Bot):
         self.bot = bot
 
-    @nextcord.slash_command(name='剪刀石頭布',description="就是個剪刀石頭布",force_global=True)
-    async def game(self, interaction: Interaction):
+    @nextcord.slash_command(name='rps',description="就是個剪刀石頭布",name_localizations={"zh-TW":"剪刀石頭布"})
+    async def rps(self, interaction: Interaction):
         global Player
         global avatar
         avatar = self.bot.user.avatar.url

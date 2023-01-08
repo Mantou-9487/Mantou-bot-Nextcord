@@ -275,7 +275,7 @@ class fight(commands.Cog):
     async def on_ready(self):
         print("Fight Ready!")
     
-    @nextcord.slash_command(name='attack', description="攻擊你的朋友!")
+    @nextcord.slash_command(name='attack', description="攻擊你的朋友!",name_localizations={"zh-TW":"攻擊朋友"})
     async def attack(self, interaction: Interaction, user:Optional[Member] = SlashOption(name="user", description="你要攻擊的朋友! 沒有朋友就算了",required=True)):
         global guild
         guild = self.bot.get_guild(1003837176464810115)
@@ -323,9 +323,6 @@ class fight(commands.Cog):
             await interaction.edit_original_message(content=None ,embed=embed, view=None)
 
 
-    async def cog_command_error(interaction:Interaction, error):
-        embed = nextcord.Embed(title=":x: 出現錯誤了!!!", description=f"```{error}```")
-        await interaction.response.send_message(embed=embed)
 
 
 def setup(bot):
