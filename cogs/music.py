@@ -168,7 +168,7 @@ class Playerview(nextcord.ui.View):
       super().__init__(timeout=None)
       self.change = "Play"
       self.now_skip = None
-      self.now_loop = None
+      self.now_loop = False
     @nextcord.ui.button(label="", style=nextcord.ButtonStyle.gray,emoji="<:pause:1037002511439122523>")
     async def pause(self, button: nextcord.ui.Button, interaction:Interaction):
       vc: wavelink.Player = interaction.guild.voice_client
@@ -287,7 +287,8 @@ class Playerview(nextcord.ui.View):
       if vc:
         global loop
         loop = self.now_loop
-        if loop == False or None:
+        if self.now_loop == False or None:
+          print("open loop")
           button.label = "關閉重複播放"
           self.now_loop = True
           loop = self.now_loop
@@ -295,6 +296,7 @@ class Playerview(nextcord.ui.View):
           await interaction.response.send_message(embed=embed)
           await interaction.followup.edit_message(message_id=message_fetch.id, content=None, view=self)
         elif loop == True:
+          print("close loop")
           button.label = "啟用重複播放"
           self.now_loop = False
           loop = self.now_loop
@@ -421,6 +423,7 @@ class Music(commands.Cog):
               loading_embed = nextcord.Embed(title="<a:Loading:1059806500241027157> | 正在讀取中...",colour=nextcord.Colour.light_grey())
               loading_embed.set_footer(text="讀取較久為正常現象,如一段時間後仍無反應請至支援群組回報")
               message = await interaction.response.send_message(embed=loading_embed)
+              message_fetch = await message.fetch()
               embed = nextcord.Embed(title="{}".format(search.title), description="00:00 / {0}".format(length_time) ,colour=nextcord.Colour.random(),url=url)
               embed.set_footer(text="機器人作者by 鰻頭!", icon_url="https://cdn.discordapp.com/avatars/949535524652216350/f1e7eb9ffd7d225971468d24748b1ba0.png?size=512")
               embed.add_field(name="下一首歌",value="沒有下一首歌!", inline=False)
@@ -454,6 +457,7 @@ class Music(commands.Cog):
             message = await interaction.response.send_message(embed=loading_embed)
             view = SelectView()
             embed = nextcord.Embed(title="請選擇一首歌",colour=nextcord.Colour.random())
+            embed.set_footer(text="如顯示交互失敗為正常情況,請稍等即可")
             await message.edit(embed=embed,view=view)
             message_fetch = await message.fetch()
             await view.wait()
