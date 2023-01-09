@@ -166,8 +166,9 @@ class Info(commands.Cog):
     @nextcord.slash_command(name="credit",description="查看協助的工作人員")
     async def credit(self,interaction:Interaction):
         embed = nextcord.Embed(title="工作人員名單",colour=nextcord.Colour.orange())
-        embed.add_field("開發人員",value="Man頭(´・ω・)#8870")
-        embed.add_field("感謝名單",value="凱恩Kane#5384\n待新增...")
+        embed.add_field(name="開發人員",value="Man頭(´・ω・)#8870")
+        embed.add_field(name="感謝名單",value="凱恩Kane#5384\n待新增...",inline=False)
+        await interaction.response.send_message(embed=embed)
                 
 def setup(bot):
     bot.add_cog(Info(bot))
